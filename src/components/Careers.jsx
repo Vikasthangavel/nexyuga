@@ -43,18 +43,24 @@ export default function Careers() {
   return (
     <section id="careers" className="relative overflow-hidden" aria-label="Careers">
       {/* ── Hero Banner ── */}
-      <div className="relative bg-dark py-24 sm:py-32 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-dark via-dark-light to-[#0a3d4d] pt-36 sm:pt-44 pb-24 sm:pb-32 overflow-hidden">
         {/* Decorative blobs */}
         <motion.div
-          className="absolute -top-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl"
+          className="absolute -top-20 -right-20 w-96 h-96 bg-primary/15 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], rotate: [0, 30, 0] }}
           transition={{ duration: 10, repeat: Infinity }}
           aria-hidden="true"
         />
         <motion.div
-          className="absolute -bottom-20 -left-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"
+          className="absolute -bottom-20 -left-20 w-72 h-72 bg-secondary/15 rounded-full blur-3xl"
           animate={{ scale: [1, 1.3, 1] }}
           transition={{ duration: 8, repeat: Infinity, delay: 2 }}
+          aria-hidden="true"
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-accent/5 rounded-full blur-3xl"
+          animate={{ scaleX: [1, 1.3, 1] }}
+          transition={{ duration: 6, repeat: Infinity }}
           aria-hidden="true"
         />
         {/* Floating emojis */}
@@ -73,12 +79,11 @@ export default function Careers() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.h1
-            initial={{ opacity: 0, y: 40, rotateX: 15 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, type: 'spring' }}
             className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4"
-            style={{ perspective: 800 }}
           >
             Join{' '}
             <motion.span
@@ -112,8 +117,8 @@ export default function Careers() {
       </div>
 
       {/* ── About / Intro ── */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-bg relative">
-        <div className="absolute top-10 right-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl" aria-hidden="true" />
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-bg relative">\n        <div className="absolute top-10 right-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl" aria-hidden="true" />
+        <div className="absolute bottom-10 left-10 w-56 h-56 bg-secondary/5 rounded-full blur-2xl" aria-hidden="true" />
         <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -145,8 +150,8 @@ export default function Careers() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              We're on a mission to make learning accessible for everyone, especially visually impaired learners. 
-              If you're passionate about creating impact, love experimenting with ideas, and want to grow in a 
+              We're on a mission to make learning accessible for everyone, especially visually impaired learners.
+              If you're passionate about creating impact, love experimenting with ideas, and want to grow in a
               collaborative environment, this is the place for you. 🚀
             </motion.p>
           </motion.div>
@@ -156,24 +161,24 @@ export default function Careers() {
             {perks.map((perk, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 40, rotateX: 10 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-30px' }}
                 transition={{ duration: 0.5, delay: i * 0.1, type: 'spring', stiffness: 150 }}
                 whileHover={{
                   y: -8,
                   scale: 1.03,
-                  boxShadow: `0 20px 40px ${perk.color}20`,
+                  boxShadow: `0 20px 40px ${perk.color}25`,
                 }}
-                className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm group cursor-default"
-                style={{ perspective: 600 }}
+                className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm group cursor-default relative overflow-hidden"
               >
+                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ background: `linear-gradient(90deg, ${perk.color}, ${perk.color}80)` }} />
                 <div className="flex items-start gap-4">
                   <motion.div
                     className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: perk.color + '15' }}
-                    whileHover={{ rotateY: 360, scale: 1.1 }}
-                    transition={{ duration: 0.5 }}
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <perk.icon size={22} style={{ color: perk.color }} />
                   </motion.div>

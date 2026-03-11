@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../logo.png';
+import logo from '../assets/logo.png';
 
 const navLinks = [
-  { name: 'Home', href: '#home', emoji: '🏠' },
-  { name: 'Our Journey', href: '#journey', emoji: '🚀' },
-  { name: 'Spotlights', href: '#video', emoji: '🎬' },
-  { name: 'Our Innovations', href: '#studies', emoji: '💡' },
+  { name: 'Home', href: '/#home', emoji: '🏠' },
+  { name: 'Our Journey', href: '/#journey', emoji: '🚀' },
+  { name: 'Spotlights', href: '/#video', emoji: '🎬' },
+  { name: 'Our Innovations', href: '/#studies', emoji: '💡' },
   { name: 'Careers', href: '/careers', emoji: '🎯', isRoute: true },
   { name: 'Contact Us', href: '/contact', emoji: '💌', isRoute: true },
 ];
@@ -17,6 +17,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
+  const location = useLocation();
+  const isInnerPage = location.pathname !== '/';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -24,16 +26,16 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const navBgClass = isInnerPage || scrolled
+    ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-primary/5'
+    : 'bg-transparent';
+
   return (
     <motion.nav
       initial={{ y: -100, rotateX: -90 }}
       animate={{ y: 0, rotateX: 0 }}
       transition={{ duration: 0.8, type: 'spring', stiffness: 80 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-lg shadow-primary/5'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navBgClass}`}
       style={{ perspective: 800 }}
       role="navigation"
       aria-label="Main navigation"
@@ -41,7 +43,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo with 3D flip */}
-          <a href="#home" className="flex items-center gap-2 group" aria-label="Nexyuga Home">
+          <Link to="/" className="flex items-center gap-2 group" aria-label="Nexyuga Home">
             <motion.img
               src={logo}
               alt="Nexyuga"
@@ -50,7 +52,7 @@ export default function Navbar() {
               transition={{ duration: 0.6 }}
               style={{ transformStyle: 'preserve-3d' }}
             />
-          </a>
+          </Link>
 
           {/* Desktop Links with emoji pop */}
           <div className="hidden lg:flex items-center gap-1">

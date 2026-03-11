@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaBookOpen, FaCalculator, FaFlask, FaGlobeAmericas } from 'react-icons/fa';
+import literatureImg from '../assets/literature.png';
+import mathImg from '../assets/mathematics.png';
+import scienceImg from '../assets/science.png';
+import socialImg from '../assets/social_studies.png';
 
 const subjects = [
   {
@@ -10,7 +14,7 @@ const subjects = [
     color: '#06B6D4',
     bgColor: '#ECFEFF',
     borderColor: '#CFFAFE',
-    illustration: '📖',
+    illustration: literatureImg,
     funEmojis: ['📚', '✍️', '📜', '🎭'],
   },
   {
@@ -20,7 +24,7 @@ const subjects = [
     color: '#0197B2',
     bgColor: '#E0F7FA',
     borderColor: '#B2EBF2',
-    illustration: '🔢',
+    illustration: mathImg,
     funEmojis: ['📐', '🧮', '📏', '➕'],
   },
   {
@@ -30,7 +34,7 @@ const subjects = [
     color: '#5ACB2A',
     bgColor: '#F0FDF4',
     borderColor: '#BBF7D0',
-    illustration: '🔬',
+    illustration: scienceImg,
     funEmojis: ['🧬', '⚗️', '🔭', '🌿'],
   },
   {
@@ -40,7 +44,7 @@ const subjects = [
     color: '#14B8A6',
     bgColor: '#F0FDFA',
     borderColor: '#CCFBF1',
-    illustration: '🌍',
+    illustration: socialImg,
     funEmojis: ['🗺️', '🏛️', '🗿', '🌏'],
   },
 ];
@@ -140,11 +144,15 @@ export default function Studies() {
                     scale: [1, 1.1, 1],
                   }}
                   transition={{ duration: 3 + i * 0.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="text-6xl mb-4"
+                  className="mb-4 overflow-hidden rounded-2xl"
                   style={{ transform: 'translateZ(30px)' }}
                   aria-hidden="true"
                 >
-                  {subject.illustration}
+                  <img
+                    src={subject.illustration}
+                    alt={subject.title}
+                    className="w-full h-36 object-cover rounded-2xl"
+                  />
                 </motion.div>
 
                 {/* Flying mini-emojis on tap */}

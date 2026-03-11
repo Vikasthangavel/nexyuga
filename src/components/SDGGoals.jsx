@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGraduationCap, FaHandshake, FaBalanceScale } from 'react-icons/fa';
+import sdg4Img from '../assets/SDG4.png';
+import sdg11Img from '../assets/SDG11.jpg';
+import sdg17Img from '../assets/SDG17.jpg';
 
 const goals = [
   {
@@ -11,6 +14,7 @@ const goals = [
     color: '#E81D2C',
     bg: '#FDEAEA',
     emoji: '📚',
+    image: sdg4Img,
     funFact: 'Education is the most powerful weapon!',
   },
   {
@@ -21,6 +25,7 @@ const goals = [
     color: '#DD1367',
     bg: '#FCE4EC',
     emoji: '⚖️',
+    image: sdg11Img,
     funFact: 'Every child deserves equal opportunity!',
   },
   {
@@ -31,6 +36,7 @@ const goals = [
     color: '#19486A',
     bg: '#E3F2FD',
     emoji: '🤝',
+    image: sdg17Img,
     funFact: 'Together we go further!',
   },
 ];
@@ -77,7 +83,7 @@ export default function SDGGoals() {
               className="group relative cursor-pointer"
               onClick={() => setFlipped(flipped === i ? null : i)}
             >
-              <div className="relative w-full" style={{ minHeight: 340 }}>
+              <div className="relative w-full" style={{ height: 440 }}>
                 <AnimatePresence mode="wait" initial={false}>
                   {flipped !== i ? (
                     /* Front face */
@@ -87,7 +93,7 @@ export default function SDGGoals() {
                       animate={{ rotateY: 0, opacity: 1 }}
                       exit={{ rotateY: 90, opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="w-full bg-white rounded-3xl p-8 shadow-lg border border-gray-100"
+                      className="w-full h-full bg-white rounded-3xl p-6 shadow-lg border border-gray-100 flex flex-col"
                       whileHover={{
                         y: -12,
                         boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
@@ -96,21 +102,19 @@ export default function SDGGoals() {
                       <motion.div
                         animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
                         transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut' }}
+                        className="flex flex-col flex-1"
                       >
                         <motion.div
-                          className="text-5xl mb-4"
-                          whileHover={{ scale: 1.4, rotate: [0, -15, 15, 0] }}
+                          className="mb-4 overflow-hidden rounded-2xl flex-shrink-0"
+                          whileHover={{ scale: 1.05 }}
                           transition={{ type: 'spring', stiffness: 300 }}
                         >
-                          {goal.emoji}
+                          <img
+                            src={goal.image}
+                            alt={goal.title}
+                            className="w-full h-32 object-cover rounded-2xl"
+                          />
                         </motion.div>
-
-                        <div
-                          className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                          style={{ backgroundColor: goal.bg }}
-                        >
-                          <goal.icon size={28} style={{ color: goal.color }} />
-                        </div>
 
                         <span
                           className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"
@@ -136,9 +140,8 @@ export default function SDGGoals() {
                       animate={{ rotateY: 0, opacity: 1 }}
                       exit={{ rotateY: 90, opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="w-full rounded-3xl p-8 flex flex-col items-center justify-center text-white shadow-lg"
+                      className="w-full h-full rounded-3xl p-8 flex flex-col items-center justify-center text-white shadow-lg"
                       style={{
-                        minHeight: 340,
                         background: `linear-gradient(135deg, ${goal.color}, ${goal.color}CC)`,
                       }}
                     >

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
-import journeyImg from '../image2.jpeg';
+import journeyImg from '../assets/image2.jpeg';
 
 const milestones = [
   { year: '2022', label: 'Idea Born 💡', color: '#5ACB2A' },

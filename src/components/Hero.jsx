@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlay, FaArrowRight } from 'react-icons/fa';
 import { BsMusicNoteBeamed, BsStarFill } from 'react-icons/bs';
 import { TbMathSymbols } from 'react-icons/tb';
-import heroImg from '../heroimage.png';
-import heroImg2 from '../heroimage2.png';
+import heroImg from '../assets/heroimage.png';
+import heroImg2 from '../assets/heroimage2.png';
 
 const heroImages = [heroImg, heroImg2];
 

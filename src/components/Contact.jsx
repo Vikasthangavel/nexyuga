@@ -61,17 +61,24 @@ export default function Contact() {
   return (
     <section id="contact-page" className="relative overflow-hidden" aria-label="Contact">
       {/* ── Hero Banner ── */}
-      <div className="relative bg-dark py-24 sm:py-32 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-dark via-dark-light to-[#0a3d4d] pt-36 sm:pt-44 pb-24 sm:pb-32 overflow-hidden">
+        {/* Animated mesh circles */}
         <motion.div
-          className="absolute -top-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl"
+          className="absolute -top-20 -right-20 w-96 h-96 bg-primary/15 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], rotate: [0, 30, 0] }}
           transition={{ duration: 10, repeat: Infinity }}
           aria-hidden="true"
         />
         <motion.div
-          className="absolute -bottom-20 -left-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"
+          className="absolute -bottom-20 -left-20 w-72 h-72 bg-secondary/15 rounded-full blur-3xl"
           animate={{ scale: [1, 1.3, 1] }}
           transition={{ duration: 8, repeat: Infinity, delay: 2 }}
+          aria-hidden="true"
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-accent/5 rounded-full blur-3xl"
+          animate={{ scaleX: [1, 1.3, 1] }}
+          transition={{ duration: 6, repeat: Infinity }}
           aria-hidden="true"
         />
         {['💌', '📞', '📍', '✉️', '🌟'].map((e, i) => (
@@ -127,10 +134,11 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* ── Form Section ── */}
+      {/* ── Form + Info Section ── */}
       <div className="py-20 px-4 sm:px-6 lg:px-8 bg-bg relative">
         <div className="absolute top-10 right-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl" aria-hidden="true" />
-        <div className="max-w-3xl mx-auto relative z-10">
+        <div className="absolute bottom-10 left-10 w-56 h-56 bg-secondary/5 rounded-full blur-2xl" aria-hidden="true" />
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -147,15 +155,58 @@ export default function Contact() {
             </motion.span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-dark">
               Feel free to write us{' '}
-              <motion.span
-                className="text-primary inline-block"
-                whileHover={{ scale: 1.05, rotate: -2 }}
-              >
+              <motion.span className="text-primary inline-block" whileHover={{ scale: 1.05, rotate: -2 }}>
                 anytime
               </motion.span>
             </h2>
           </motion.div>
 
+          <div className="grid lg:grid-cols-5 gap-10 items-start">
+            {/* Contact info column */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-2 space-y-5"
+            >
+              <div className="bg-gradient-to-br from-primary to-primary-dark rounded-3xl p-8 text-white shadow-xl shadow-primary/20">
+                <motion.div className="text-4xl mb-4" animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity }}>👋</motion.div>
+                <h3 className="font-heading text-xl font-bold mb-2">Let's get in touch</h3>
+                <p className="text-white/70 text-sm leading-relaxed">We'd love to hear from you. Reach out and we'll get back to you as soon as possible.</p>
+              </div>
+              {contactInfo.map((info, i) => (
+                <motion.a
+                  key={i}
+                  href={info.href}
+                  target={info.icon === FaMapMarkerAlt ? '_blank' : undefined}
+                  rel={info.icon === FaMapMarkerAlt ? 'noopener noreferrer' : undefined}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  whileHover={{ x: 6, boxShadow: `0 10px 30px ${info.color}20` }}
+                  className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm group cursor-pointer"
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: info.bg }}>
+                    <info.icon size={20} style={{ color: info.color }} />
+                  </div>
+                  <div>
+                    <p className="text-dark/40 text-xs mb-0.5">{info.label}</p>
+                    <p className="text-dark font-heading font-bold text-sm">{info.value}</p>
+                  </div>
+                </motion.a>
+              ))}
+            </motion.div>
+
+            {/* Form column */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="lg:col-span-3 bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+            >
           <motion.form
             onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 40 }}
@@ -249,43 +300,7 @@ export default function Contact() {
               </motion.button>
             </div>
           </motion.form>
-        </div>
-      </div>
-
-      {/* ── Contact Info Cards ── */}
-      <div className="relative -mt-6 z-20 px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-5">
-            {contactInfo.map((info, i) => (
-              <motion.a
-                key={i}
-                href={info.href}
-                target={info.icon === FaMapMarkerAlt ? '_blank' : undefined}
-                rel={info.icon === FaMapMarkerAlt ? 'noopener noreferrer' : undefined}
-                initial={{ opacity: 0, y: 40, rotateX: 10 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: true, margin: '-30px' }}
-                transition={{ duration: 0.5, delay: i * 0.12, type: 'spring', stiffness: 150 }}
-                whileHover={{
-                  y: -8,
-                  scale: 1.04,
-                  boxShadow: `0 20px 40px ${info.color}20`,
-                }}
-                className="bg-white rounded-2xl p-6 border border-gray-100 shadow-md text-center group cursor-pointer"
-                style={{ perspective: 600 }}
-              >
-                <motion.div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4"
-                  style={{ backgroundColor: info.bg }}
-                  whileHover={{ rotateY: 360, scale: 1.15 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <info.icon size={24} style={{ color: info.color }} />
-                </motion.div>
-                <p className="text-dark/50 text-xs mb-1">{info.label}</p>
-                <p className="text-dark font-heading font-bold text-sm">{info.value}</p>
-              </motion.a>
-            ))}
+            </motion.div>
           </div>
         </div>
       </div>
@@ -353,7 +368,7 @@ export default function Contact() {
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <FaMapMarkerAlt className="text-accent" size={18} />
+                  <FaMapMarkerAlt className="text-primary" size={18} />
                 </motion.div>
                 <div>
                   <p className="text-dark font-heading font-bold text-sm">KSR College of Technology</p>

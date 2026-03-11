@@ -11,7 +11,7 @@ import {
   FaHeart,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import logo from '../logo.png';
+import logo from '../assets/logo.png';
 
 const exploreLinks = [
   { name: 'Home' },
