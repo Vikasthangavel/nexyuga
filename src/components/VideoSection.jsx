@@ -1,115 +1,108 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlay } from 'react-icons/fa';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+
+const EASE = [0.55, 0.085, 0, 0.99];
 
 export default function VideoSection() {
   const [playing, setPlaying] = useState(false);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const videoY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const textY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
 
   return (
-    <section id="video" className="py-24 px-6 sm:px-8 lg:px-12 bg-white relative overflow-hidden flex flex-col items-center" aria-label="Video spotlight">
-      
-      {/* Subtle geometric background accents */}
-      <div className="absolute top-0 right-1/3 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="max-w-7xl w-full mx-auto relative z-10 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-        {/* Left – Text Content */}
+    <section id="video" ref={sectionRef} className="py-28 px-6 sm:px-8 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto relative z-10 flex flex-col lg:flex-row gap-14 items-center">
+        {/* Text */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:w-1/2"
+          transition={{ duration: 0.8, ease: EASE }}
+          className="lg:w-5/12"
+          style={{ y: textY }}
         >
-          <span className="text-sm font-semibold tracking-widest uppercase text-primary mb-4 block">
+          <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/60 mb-4 block">
             Spotlight
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-dark tracking-tight mb-6 leading-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-dark tracking-tight mb-5 leading-tight">
             Discover How We Inspire{' '}
-            <span className="text-primary italic font-light pr-2">
-              Independence
-            </span>
+            <span className="gradient-text">Independence</span>
           </h2>
-          
-          <div className="space-y-6 text-gray-500 text-lg font-light leading-relaxed mb-8">
-            <p>
-              Watch our story unfold and see how our tactile learning kits and audio tools are transforming classrooms. We empower visually impaired children to explore knowledge on their own terms, providing the foundation for a more inclusive educational future.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-6 pt-6 border-t border-gray-100">
-            <div className="flex flex-col">
-              <span className="text-3xl font-bold text-dark mb-1">2K+</span>
-              <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Viewers Reached</span>
+          <p className="text-gray-500 text-[16px] font-light leading-relaxed mb-8">
+            Watch our story unfold and see how our tactile learning kits and audio tools are transforming classrooms, empowering visually impaired children to explore knowledge on their own terms.
+          </p>
+          <div className="flex items-center gap-8 pt-6 border-t border-gray-100">
+            <div>
+              <span className="text-2xl font-bold text-dark">2K+</span>
+              <span className="block text-xs text-gray-400 uppercase tracking-wider mt-1">Viewers</span>
             </div>
-            <div className="h-12 w-px bg-gray-200" />
-            <div className="flex flex-col">
-              <span className="text-3xl font-bold text-dark mb-1">100%</span>
-              <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Commitment</span>
+            <div className="h-10 w-px bg-gray-200" />
+            <div>
+              <span className="text-2xl font-bold text-dark">100%</span>
+              <span className="block text-xs text-gray-400 uppercase tracking-wider mt-1">Commitment</span>
             </div>
           </div>
         </motion.div>
 
-        {/* Right – Video Card */}
+        {/* Video */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:w-1/2 w-full"
+          transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+          className="lg:w-7/12 w-full"
+          style={{ y: videoY }}
         >
-          <div className="relative rounded-3xl p-3 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-gray-100 bg-white group">
-            <div className="rounded-2xl overflow-hidden relative aspect-video bg-gray-100">
-              <AnimatePresence mode="wait">
-                {!playing ? (
-                  <motion.div
-                    key="thumbnail"
-                    className="absolute inset-0 cursor-pointer"
-                    onClick={() => setPlaying(true)}
-                    exit={{ opacity: 0, scale: 1.05 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    role="button"
-                    aria-label="Play video"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === 'Enter' && setPlaying(true)}
-                  >
-                    <img
-                      src="https://img.youtube.com/vi/U79oCZsotd8/maxresdefault.jpg"
-                      alt="Nexyuga Innovations video thumbnail"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
-                      loading="lazy"
-                    />
-                    {/* Sophisticated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-dark/20 to-transparent mix-blend-multiply transition-opacity duration-500 group-hover:opacity-80" />
-
-                    {/* Elegant Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-20 h-20 rounded-full flex items-center justify-center group-hover:bg-primary transition-colors duration-500 shadow-xl bg-white/10 backdrop-blur-md border border-white/20">
-                        <FaPlay className="text-white text-xl ml-1 transition-transform duration-300 group-hover:scale-110" />
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="player"
-                    className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <iframe
-                      className="w-full h-full"
-                      src="https://www.youtube.com/embed/U79oCZsotd8?autoplay=1&rel=0"
-                      title="Nexyuga Innovations — Our Story"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+          <div className="relative rounded-2xl overflow-hidden bg-gray-100 aspect-video border border-gray-100 shadow-lg">
+            <AnimatePresence mode="wait">
+              {!playing ? (
+                <motion.div
+                  key="thumbnail"
+                  className="absolute inset-0 cursor-pointer group"
+                  onClick={() => setPlaying(true)}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  role="button"
+                  aria-label="Play video"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && setPlaying(true)}
+                >
+                  <img
+                    src="https://img.youtube.com/vi/U79oCZsotd8/maxresdefault.jpg"
+                    alt="Nexyuga Innovations video"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-dark/30 group-hover:bg-dark/20 transition-colors duration-500" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.div
+                      className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0D2E3B" className="ml-1">
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div key="player" className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <iframe
+                    className="w-full h-full"
+                    src="https://www.youtube.com/embed/U79oCZsotd8?autoplay=1&rel=0"
+                    title="Nexyuga Innovations — Our Story"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
       </div>

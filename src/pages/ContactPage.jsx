@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
+import PageAnimations from '../components/PageAnimations';
 
 export default function ContactPage() {
   useEffect(() => {
@@ -9,7 +10,8 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <main className="relative">
+    <main className="relative overflow-x-hidden">
+      <PageAnimations />
       <Navbar />
       <Contact />
       <Footer />

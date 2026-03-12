@@ -1,26 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+
+const EASE = [0.55, 0.085, 0, 0.99];
 
 const contactInfo = [
-  {
-    icon: FaPhone,
-    label: 'Call Us Now',
-    value: '+91 70940 94815',
-    href: 'tel:+917094094815',
-  },
-  {
-    icon: FaEnvelope,
-    label: 'Email Address',
-    value: 'info@nexyuga.in',
-    href: 'mailto:info@nexyuga.in',
-  },
-  {
-    icon: FaMapMarkerAlt,
-    label: 'Office Location',
-    value: 'Tiruchengode, Tamil Nadu',
-    href: 'https://maps.google.com/?q=KSR+Kalvi+Nagar+Tiruchengode',
-  },
+  { label: 'Call Us', value: '+91 70940 94815', href: 'tel:+917094094815' },
+  { label: 'Email', value: 'info@nexyuga.in', href: 'mailto:info@nexyuga.in' },
+  { label: 'Location', value: 'Tiruchengode, Tamil Nadu', href: 'https://maps.google.com/?q=KSR+Kalvi+Nagar+Tiruchengode' },
 ];
 
 export default function Contact() {
@@ -38,47 +24,53 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact-page" className="py-24 px-6 sm:px-8 lg:px-12 bg-white relative overflow-hidden flex flex-col items-center">
-      {/* Sleek animated background gradient */}
-      <motion.div
-        animate={{ filter: ['hue-rotate(0deg)', 'hue-rotate(15deg)', 'hue-rotate(0deg)'] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-        className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-white to-secondary/5 pointer-events-none"
-      />
-
-      <div className="max-w-4xl w-full relative z-10 flex flex-col items-center">
+    <section id="contact-page" className="py-28 px-6 sm:px-8 relative overflow-hidden">
+      <div className="max-w-3xl mx-auto relative z-10">
         {/* Header */}
+        <div className="text-center mb-14">
+          <motion.span
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/60 mb-4 block"
+          >
+            Get In Touch
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="text-4xl md:text-5xl font-bold text-dark tracking-tight mb-5"
+          >
+            Let's <span className="gradient-text">Connect</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-500 text-lg font-light max-w-lg mx-auto"
+          >
+            Whether you have a question or want to collaborate, drop us a message below.
+          </motion.p>
+        </div>
+
+        {/* Form */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16"
+          transition={{ duration: 0.7, ease: EASE }}
+          className="bg-white rounded-2xl p-8 md:p-10 border border-gray-100 shadow-sm mb-12"
         >
-          <span className="text-sm font-semibold tracking-widest uppercase text-primary mb-3 block">Get In Touch</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-dark tracking-tight">Let's Connect</h2>
-          <p className="mt-4 text-gray-500 max-w-xl mx-auto text-lg font-light leading-relaxed">
-            Whether you have a question or want to collaborate, we're ready to hear from you. Drop us a message below.
-          </p>
-        </motion.div>
-
-        {/* Contact Form */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-gray-100 mb-16 relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid md:grid-cols-2 gap-5">
               {[
                 { name: 'name', type: 'text', placeholder: 'Your Name' },
                 { name: 'email', type: 'email', placeholder: 'Email Address' },
-              ].map((field, idx) => (
-                <div key={idx} className="relative">
+              ].map((field) => (
+                <div key={field.name} className="relative">
                   <input
                     type={field.type}
                     name={field.name}
@@ -88,12 +80,13 @@ export default function Contact() {
                     onBlur={() => setFocusedField(null)}
                     required
                     placeholder={field.placeholder}
-                    className="w-full bg-gray-50/50 border-b-2 border-transparent px-4 py-4 rounded-xl text-dark placeholder:text-gray-400 focus:outline-none focus:bg-white transition-all duration-300"
+                    className="w-full bg-gray-50 border border-gray-100 px-5 py-3.5 rounded-xl text-dark placeholder:text-gray-400 text-sm focus:outline-none focus:bg-white focus:border-primary/30 transition-all duration-400"
                   />
-                  <motion.div 
+                  <motion.div
                     initial={false}
-                    animate={{ width: focusedField === field.name ? '100%' : '0%' }}
-                    className="absolute bottom-0 left-0 h-0.5 bg-primary"
+                    animate={{ scaleX: focusedField === field.name ? 1 : 0 }}
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
+                    transition={{ duration: 0.3, ease: EASE }}
                   />
                 </div>
               ))}
@@ -108,12 +101,13 @@ export default function Contact() {
                 onFocus={() => setFocusedField('subject')}
                 onBlur={() => setFocusedField(null)}
                 placeholder="Subject"
-                className="w-full bg-gray-50/50 border-b-2 border-transparent px-4 py-4 rounded-xl text-dark placeholder:text-gray-400 focus:outline-none focus:bg-white transition-all duration-300"
+                className="w-full bg-gray-50 border border-gray-100 px-5 py-3.5 rounded-xl text-dark placeholder:text-gray-400 text-sm focus:outline-none focus:bg-white focus:border-primary/30 transition-all duration-400"
               />
-              <motion.div 
-                 initial={false}
-                 animate={{ width: focusedField === 'subject' ? '100%' : '0%' }}
-                 className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              <motion.div
+                initial={false}
+                animate={{ scaleX: focusedField === 'subject' ? 1 : 0 }}
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
+                transition={{ duration: 0.3, ease: EASE }}
               />
             </div>
 
@@ -127,36 +121,39 @@ export default function Contact() {
                 placeholder="How can we help you?"
                 required
                 rows={5}
-                className="w-full bg-gray-50/50 border-b-2 border-transparent px-4 py-4 rounded-xl text-dark placeholder:text-gray-400 focus:outline-none focus:bg-white transition-all duration-300 resize-none"
+                className="w-full bg-gray-50 border border-gray-100 px-5 py-3.5 rounded-xl text-dark placeholder:text-gray-400 text-sm focus:outline-none focus:bg-white focus:border-primary/30 transition-all duration-400 resize-none"
               />
-               <motion.div 
-                 initial={false}
-                 animate={{ width: focusedField === 'message' ? '100%' : '0%' }}
-                 className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              <motion.div
+                initial={false}
+                animate={{ scaleX: focusedField === 'message' ? 1 : 0 }}
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
+                transition={{ duration: 0.3, ease: EASE }}
               />
             </div>
 
-            <div className="text-center pt-4">
+            <div className="text-center pt-2">
               <motion.button
                 type="submit"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-10 py-4 bg-dark text-white rounded-full font-medium shadow-xl hover:bg-dark/90 transition-all overflow-hidden relative group"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-dark text-white rounded-full text-sm font-medium hover:bg-dark/90 transition-colors duration-300"
               >
-                <div className="absolute inset-0 w-1/4 h-full bg-white/10 skew-x-12 -ml-16 group-hover:animate-shimmer" />
-                <span>{submitted ? 'Message Sent' : 'Send Message'}</span>
-                {submitted ? <span className="ml-2">✓</span> : <FaPaperPlane className="ml-2 text-sm" />}
+                {submitted ? 'Message Sent ✓' : 'Send Message'}
+                {!submitted && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                  </svg>
+                )}
               </motion.button>
-              
               <AnimatePresence>
                 {submitted && (
-                  <motion.p 
+                  <motion.p
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="text-green-600 mt-4 text-sm font-medium"
+                    className="text-green-600 mt-3 text-sm"
                   >
-                    Thank you! We will get back to you shortly.
+                    Thank you! We'll get back to you shortly.
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -164,32 +161,26 @@ export default function Contact() {
           </form>
         </motion.div>
 
-        {/* Contact Information Horizontal Cards */}
-        <div className="grid md:grid-cols-3 gap-6 w-full">
+        {/* Contact cards */}
+        <div className="grid md:grid-cols-3 gap-4">
           {contactInfo.map((info, idx) => (
             <motion.a
               key={idx}
               href={info.href}
-              target={info.icon === FaMapMarkerAlt ? '_blank' : undefined}
-              rel={info.icon === FaMapMarkerAlt ? 'noopener noreferrer' : undefined}
+              target={idx === 2 ? '_blank' : undefined}
+              rel={idx === 2 ? 'noopener noreferrer' : undefined}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 transition-all hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] flex flex-col items-center text-center group"
+              transition={{ duration: 0.6, delay: idx * 0.1, ease: EASE }}
+              className="bg-white p-6 rounded-2xl border border-gray-100 hover:border-primary/15 hover:shadow-md hover:-translate-y-0.5 transition-all duration-500 text-center"
             >
-              <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center mb-5 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                <info.icon size={20} />
-              </div>
-              <h3 className="text-gray-500 text-sm font-medium mb-1">{info.label}</h3>
-              <p className="text-dark font-bold text-lg">{info.value}</p>
+              <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">{info.label}</p>
+              <p className="text-dark font-semibold">{info.value}</p>
             </motion.a>
           ))}
         </div>
       </div>
-      
-      {/* Tailwind custom shimmer animation added inline dynamically via index.css or arbitrary tailwind, using absolute classes above */}
     </section>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Careers from '../components/Careers';
 import Footer from '../components/Footer';
+import PageAnimations from '../components/PageAnimations';
 
 export default function CareersPage() {
   useEffect(() => {
@@ -9,7 +10,8 @@ export default function CareersPage() {
   }, []);
 
   return (
-    <main className="relative">
+    <main className="relative overflow-x-hidden">
+      <PageAnimations />
       <Navbar />
       <Careers />
       <Footer />
