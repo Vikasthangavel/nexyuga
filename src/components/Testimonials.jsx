@@ -52,8 +52,15 @@ export default function TestimonialWheel() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const combinedRotation = useTransform(scrollRotation, r => r + continuousRotation);
-  const counterRotation = useTransform(combinedRotation, r => -r);
+  const combinedRotationRaw = useTransform(scrollRotation, r => r + continuousRotation);
+  
+  // Calculate the target rotation to bring the activeItem to the top.
+  // Our math places index 0 at -90deg. If activeIndex is N, it's at angle N * (360/len).
+  // To bring it to 0, we rotate the entire wheel by -N * (360/len).
+  const targetOffsetDeg = testimonials.length > 0 ? -(activeIndex * (360 / testimonials.length)) : 0;
+  
+  // Keep the continuous scroll/rotation mapped purely reversed for the base rotate style
+  const counterRotationRaw = useTransform(combinedRotationRaw, r => -r);
 
   const centerX = 525;
   const centerY = 525;
@@ -106,7 +113,9 @@ export default function TestimonialWheel() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1050px] pointer-events-none">
             <motion.div
               className="relative w-[1050px] h-[1050px] mx-auto pointer-events-auto"
-              style={{ rotate: combinedRotation }}
+              style={{ rotate: combinedRotationRaw }}
+              animate={{ transform: `rotate(${targetOffsetDeg}deg)` }}
+              transition={{ duration: 0.8, type: 'spring', bounce: 0.2 }}
             >
               {testimonials.map((t, index) => {
                 const angleStep = (2 * Math.PI) / testimonials.length;
@@ -129,7 +138,12 @@ export default function TestimonialWheel() {
                       boxShadow: isActive ? `0 0 0 3px ${ringColor}40, 0 8px 24px ${ringColor}30` : undefined,
                     }}
                   >
-                    <motion.div style={{ rotate: counterRotation }} className="w-full h-full">
+                    <motion.div 
+                      style={{ rotate: counterRotationRaw }} 
+                      animate={{ transform: `rotate(${-targetOffsetDeg}deg)` }}
+                      transition={{ duration: 0.8, type: 'spring', bounce: 0.2 }}
+                      className="w-full h-full"
+                    >
                       {t.imageUrl ? (
                         <img src={t.imageUrl} alt={t.name} className="w-full h-full object-cover bg-gray-50" />
                       ) : (
