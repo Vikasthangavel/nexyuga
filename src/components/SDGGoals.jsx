@@ -99,11 +99,25 @@ export default function SDGGoals() {
               transition={{ duration: 0.7, delay: i * 0.12, ease: EASE }}
               className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary/15 hover:shadow-xl hover:-translate-y-1 transition-all duration-500"
             >
+<<<<<<< HEAD
               <div className="h-52 overflow-hidden relative sdg-image-reveal">
                 <img
                   src={goal.image}
                   alt={goal.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+=======
+              {/* Subtle top border in brand color */}
+              <div 
+                className="absolute top-0 left-0 w-full h-1 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out z-20"
+                style={{ backgroundColor: goal.color }}
+              />
+
+              <div className="overflow-hidden relative bg-gray-100 max-h-36">
+                <img
+                  src={goal.image}
+                  alt={goal.title}
+                  className="w-full h-auto block opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out mix-blend-multiply"
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent" />
                 <span className="absolute bottom-4 left-5 text-xs font-semibold text-white/90 bg-white/15 backdrop-blur-sm px-3 py-1 rounded-md">

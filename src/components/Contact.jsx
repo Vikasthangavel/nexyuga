@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+<<<<<<< HEAD
 
 const EASE = [0.55, 0.085, 0, 0.99];
+=======
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
 
 const contactInfo = [
   { label: 'Call Us', value: '+91 70940 94815', href: 'tel:+917094094815' },
@@ -12,16 +18,30 @@ const contactInfo = [
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: '', email: '', subject: '', message: '' });
+    setSending(true);
+    try {
+      await addDoc(collection(db, 'enquiries'), {
+        ...form,
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error('Failed to save enquiry:', err);
+    } finally {
+      setSending(false);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    }
   };
+
 
   return (
     <section id="contact-page" className="py-28 px-6 sm:px-8 relative overflow-hidden">
@@ -134,8 +154,10 @@ export default function Contact() {
             <div className="text-center pt-2">
               <motion.button
                 type="submit"
+                disabled={sending}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+<<<<<<< HEAD
                 className="inline-flex items-center gap-2 px-8 py-3.5 bg-dark text-white rounded-full text-sm font-medium hover:bg-dark/90 transition-colors duration-300"
               >
                 {submitted ? 'Message Sent ✓' : 'Send Message'}
@@ -144,6 +166,13 @@ export default function Contact() {
                     <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
                   </svg>
                 )}
+=======
+                className="inline-flex items-center gap-2 px-10 py-4 bg-dark text-white rounded-full font-medium shadow-xl hover:bg-dark/90 transition-all overflow-hidden relative group disabled:opacity-70"
+              >
+                <div className="absolute inset-0 w-1/4 h-full bg-white/10 skew-x-12 -ml-16 group-hover:animate-shimmer" />
+                <span>{submitted ? 'Message Sent' : sending ? 'Sending…' : 'Send Message'}</span>
+                {submitted ? <span className="ml-2">✓</span> : <FaPaperPlane className="ml-2 text-sm" />}
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
               </motion.button>
               <AnimatePresence>
                 {submitted && (

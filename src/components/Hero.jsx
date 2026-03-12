@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { FaPlay } from 'react-icons/fa';
@@ -77,11 +78,33 @@ export default function Hero() {
   const parallaxY = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
+=======
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { FaPlay, FaArrowRight } from 'react-icons/fa';
+import heroImg1 from '../assets/heroimage.png';
+import heroImg2 from '../assets/heroimage2.png';
+
+const heroImages = [heroImg1, heroImg2];
+
+export default function Hero() {
+  const [currentImg, setCurrentImg] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImg((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
   return (
     <section
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-cyan-50/30 to-purple-50/20"
     >
+<<<<<<< HEAD
       {/* Animated gradient background orbs */}
       <motion.div 
         className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full opacity-30 pointer-events-none"
@@ -166,6 +189,19 @@ export default function Hero() {
               className="absolute -left-16 md:-left-24 top-1/2 -translate-y-1/2 w-[300px] h-[400px] pointer-events-none"
               viewBox="0 0 200 400"
               fill="none"
+=======
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* Left Side Visual (Curve & Carousel Card) */}
+        <div className="hidden lg:flex lg:col-span-4 relative h-[600px] items-center justify-center">
+          {/* Decorative curved SVG line */}
+          <div className="absolute top-0 bottom-0 left-[-40%] w-[150%] pointer-events-none">
+            <svg 
+              viewBox="0 0 200 800" 
+              className="w-full h-full stroke-primary drop-shadow-[0_0_8px_rgba(1,151,178,0.5)]"
+              fill="none" 
+              strokeWidth="3"
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
             >
               {/* Pink/Magenta curve */}
               <motion.path
@@ -200,6 +236,50 @@ export default function Hero() {
                 </linearGradient>
               </defs>
             </svg>
+<<<<<<< HEAD
+=======
+          </div>
+          
+          {/* Floating Image Carousel Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: -5, y: [0, -10, 0] }}
+            transition={{ 
+              duration: 0.8, 
+              y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            }}
+            className="relative z-10 inline-block max-w-xs rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gray-50 transform -translate-x-12"
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentImg}
+                src={heroImages[currentImg]}
+                alt="Tactile Learning Tool"
+                className="block w-auto h-auto max-w-full"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.8, ease: 'easeInOut' }}
+              />
+            </AnimatePresence>
+
+            {/* Dot indicators */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {heroImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImg(i)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    i === currentImg ? 'bg-white w-4' : 'bg-white/50'
+                  }`}
+                  style={{ rotate: '5deg' }}
+                  aria-label={`Switch to image ${i + 1}`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
 
             {/* Main tilted card */}
             <motion.div
@@ -240,6 +320,48 @@ export default function Hero() {
                 />
               </div>
             </motion.div>
+<<<<<<< HEAD
+=======
+
+            {/* Top Right Mini-Text */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="hidden lg:block text-right max-w-[200px]"
+            >
+              <p className="text-dark font-semibold text-lg leading-tight">Empowering <br/> Accessible Innovation.</p>
+            </motion.div>
+          </div>
+
+          {/* Massive Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="mb-6 text-dark relative z-20"
+          >
+            <h1 className="text-[42px] sm:text-[58px] md:text-[72px] lg:text-[86px] font-bold leading-[1.05] tracking-tight">
+              Empowering{' '}
+              <span className="relative inline-block text-primary">
+                Confidence
+                {/* Corner box accent */}
+                <div className="absolute inset-[-4px] md:inset-[-8px] border border-primary/50 pointer-events-none flex justify-between flex-col">
+                  <div className="flex justify-between -mt-[3px] md:-mt-[4px]">
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                  </div>
+                  <div className="flex justify-between -mb-[3px] md:-mb-[4px]">
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                  </div>
+                </div>
+              </span>
+              <br />
+              Through Touch{' '}
+              <span className="text-primary">&amp; Audio</span>
+            </h1>
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
           </motion.div>
 
           {/* ── RIGHT: Content Area ── */}
@@ -251,6 +373,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
               className="flex flex-wrap items-center justify-between gap-4 mb-8"
             >
+<<<<<<< HEAD
               {/* People joined badge - animated entrance */}
               <motion.div 
                 className="flex items-center gap-3"
@@ -303,6 +426,14 @@ export default function Hero() {
                   Meets Execution.
                 </TextReveal>
               </div>
+=======
+               <Button asChild size="lg" className="h-14 px-8 rounded-full text-base text-white shadow-xl transition-all hover:-translate-y-1" style={{ backgroundColor: '#5ACB2A' }} onMouseEnter={e => e.currentTarget.style.backgroundColor='#4ab524'} onMouseLeave={e => e.currentTarget.style.backgroundColor='#5ACB2A'}>
+                 <a href="#studies">Let's Collaborate!</a>
+               </Button>
+               <a href="#video" className="w-12 h-12 rounded-full border-2 text-white flex items-center justify-center hover:scale-110 transition-transform cursor-pointer" style={{ borderColor: '#0197B2', backgroundColor: '#0197B2' }}>
+                 <FaPlay className="ml-1 text-sm" />
+               </a>
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
             </motion.div>
 
             {/* Main Heading with Character Reveal */}
@@ -353,6 +484,7 @@ export default function Hero() {
 
             {/* Bottom row: CTA + Description */}
             <motion.div
+<<<<<<< HEAD
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.3, ease: EASE }}
@@ -416,6 +548,16 @@ export default function Hero() {
                   </motion.span>
                 ))}
               </motion.p>
+=======
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ duration: 0.8, delay: 0.4 }}
+               className="max-w-[340px]"
+            >
+               <p className="text-gray-500 leading-relaxed font-light">
+                 Accessible education for everyone. We create tactile and audio learning tools that help visually impaired children learn independently through touch and sound.
+               </p>
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
             </motion.div>
           </div>
         </div>

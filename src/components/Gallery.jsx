@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 
 import img1 from '../assets/gallery/1.jpg';
 import img2 from '../assets/gallery/2.jpg';
@@ -51,8 +52,24 @@ const COLS = 13;
 const ROWS = 10;
 
 const images = [img1, img2, img7, img8, img9, imgEmpower, imgJBF, imgAkshay, imgPramod];
+=======
+import { useCollection } from '../hooks/useCollection';
+
+// 7 columns heart pattern
+const heartPattern = [
+  0, 1, 1, 0, 1, 1, 0,
+  1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1,
+  0, 1, 1, 1, 1, 1, 0,
+  0, 0, 1, 1, 1, 0, 0,
+  0, 0, 0, 1, 0, 0, 0,
+];
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
+
+const VISIBLE_SLOTS = heartPattern.filter(s => s === 1).length; // 27
 
 export default function Gallery() {
+<<<<<<< HEAD
   const gridRef = useRef(null);
   const glowRef = useRef(null);
 
@@ -188,14 +205,106 @@ export default function Gallery() {
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.8 }}
+=======
+  const { data, loading } = useCollection('gallery');
+
+  // If nothing uploaded yet, render nothing
+  if (!loading && data.length === 0) return null;
+
+  // Tile data to fill all 27 visible heart slots
+  const filled = data.length > 0
+    ? Array.from({ length: VISIBLE_SLOTS }, (_, i) => data[i % data.length])
+    : [];
+
+  let imgIndex = 0;
+
+  return (
+    <section
+      id="gallery"
+      className="py-24 bg-white relative overflow-hidden font-sans flex flex-col items-center"
+    >
+      <div className="max-w-[1000px] w-full mx-auto px-4 sm:px-6 relative z-10">
+
+        {/* Header */}
+        <div className="text-center mb-16">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-sm font-semibold tracking-widest uppercase text-primary mb-4 block"
+          >
+            Moments of Impact
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.95 }}
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.05 }}
             className="rounded-xl overflow-hidden aspect-square shadow-md"
           >
+<<<<<<< HEAD
             <img src={src} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
           </motion.div>
         ))}
+=======
+            The Heart of Our Mission
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-500 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed"
+          >
+            A visual journey of our key milestones, partnerships, and the real people who make our mission possible.
+          </motion.p>
+        </div>
+
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Heart Grid */}
+        {!loading && filled.length > 0 && (
+          <div className="relative w-full max-w-[800px] mx-auto mt-10 p-2 sm:p-4">
+            <motion.div
+              className="absolute inset-0 bg-primary opacity-10 blur-[60px] rounded-full pointer-events-none"
+              animate={{ scale: [1, 1.05, 1], opacity: [0.08, 0.15, 0.08] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <div className="relative z-10 grid grid-cols-7 gap-1 sm:gap-2 md:gap-3 lg:gap-4">
+              {heartPattern.map((slot, i) => {
+                if (slot === 0) return <div key={`empty-${i}`} className="col-span-1" />;
+                const item = filled[imgIndex % filled.length];
+                imgIndex++;
+                return (
+                  <motion.div
+                    key={`img-${i}`}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: '50px' }}
+                    transition={{ duration: 0.5, delay: Math.random() * 0.3, ease: 'easeOut' }}
+                    whileHover={{ scale: 1.15, zIndex: 10, boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+                    className="relative group rounded-md md:rounded-xl overflow-hidden bg-gray-100 cursor-pointer shadow-sm aspect-square border border-gray-100"
+                  >
+                    <img
+                      src={item.imageUrl}
+                      alt={item.caption || 'Gallery'}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors duration-300" />
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
       </div>
     </section>
   );

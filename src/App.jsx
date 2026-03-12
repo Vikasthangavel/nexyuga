@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Home from './pages/Home';
 import CareersPage from './pages/CareersPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 
 const pageVariants = {
   initial: { opacity: 0, y: 24 },
@@ -34,7 +35,16 @@ function AnimatedRoutes() {
 function App() {
   return (
     <BrowserRouter>
+<<<<<<< HEAD
       <AnimatedRoutes />
+=======
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/nx-admin-2024" element={<AdminPage />} />
+      </Routes>
+>>>>>>> 9c561776da4a6ce87c05557ab683098087f0b50f
     </BrowserRouter>
   );
 }
