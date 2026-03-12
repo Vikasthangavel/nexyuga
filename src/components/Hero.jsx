@@ -1,9 +1,22 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { FaPlay, FaArrowRight } from 'react-icons/fa';
-import heroImg from '../assets/heroimage.png';
+import heroImg1 from '../assets/heroimage.png';
+import heroImg2 from '../assets/heroimage2.png';
+
+const heroImages = [heroImg1, heroImg2];
 
 export default function Hero() {
+  const [currentImg, setCurrentImg] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImg((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section
       id="home"
@@ -11,7 +24,7 @@ export default function Hero() {
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
-        {/* Left Side Visual (Curve & Card) */}
+        {/* Left Side Visual (Curve & Carousel Card) */}
         <div className="hidden lg:flex lg:col-span-4 relative h-[600px] items-center justify-center">
           {/* Decorative curved SVG line */}
           <div className="absolute top-0 bottom-0 left-[-40%] w-[150%] pointer-events-none">
@@ -32,17 +45,43 @@ export default function Hero() {
             </svg>
           </div>
           
-          {/* Floating Image Card */}
+          {/* Floating Image Carousel Card */}
           <motion.div
-             initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
-             animate={{ opacity: 1, scale: 1, rotate: -5, y: [0, -10, 0] }}
-             transition={{ 
-               duration: 0.8, 
-               y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-             }}
-             className="relative z-10 w-64 h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gray-50 transform -translate-x-12"
+            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: -5, y: [0, -10, 0] }}
+            transition={{ 
+              duration: 0.8, 
+              y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            }}
+            className="relative z-10 inline-block max-w-xs rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gray-50 transform -translate-x-12"
           >
-             <img src={heroImg} alt="Tactile Learning Tool" className="w-full h-full object-cover" />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentImg}
+                src={heroImages[currentImg]}
+                alt="Tactile Learning Tool"
+                className="block w-auto h-auto max-w-full"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.8, ease: 'easeInOut' }}
+              />
+            </AnimatePresence>
+
+            {/* Dot indicators */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {heroImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImg(i)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    i === currentImg ? 'bg-white w-4' : 'bg-white/50'
+                  }`}
+                  style={{ rotate: '5deg' }}
+                  aria-label={`Switch to image ${i + 1}`}
+                />
+              ))}
+            </div>
           </motion.div>
         </div>
 
@@ -87,24 +126,27 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-10 text-dark relative z-20"
+            className="mb-6 text-dark relative z-20"
           >
-            <h1 className="text-[50px] sm:text-[70px] md:text-[90px] lg:text-[110px] font-bold leading-[1.05] tracking-tight">
-              Innovation <br /> Starts{' '}
+            <h1 className="text-[42px] sm:text-[58px] md:text-[72px] lg:text-[86px] font-bold leading-[1.05] tracking-tight">
+              Empowering{' '}
               <span className="relative inline-block text-primary">
-                 Here.
-                 {/* Bounding Box wrapper */}
-                 <div className="absolute inset-[-4px] md:inset-[-8px] border border-primary/50 pointer-events-none flex justify-between flex-col">
-                   <div className="flex justify-between -mt-[3px] md:-mt-[4px]">
-                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
-                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
-                   </div>
-                   <div className="flex justify-between -mb-[3px] md:-mb-[4px]">
-                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
-                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
-                   </div>
-                 </div>
+                Confidence
+                {/* Corner box accent */}
+                <div className="absolute inset-[-4px] md:inset-[-8px] border border-primary/50 pointer-events-none flex justify-between flex-col">
+                  <div className="flex justify-between -mt-[3px] md:-mt-[4px]">
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                  </div>
+                  <div className="flex justify-between -mb-[3px] md:-mb-[4px]">
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                  </div>
+                </div>
               </span>
+              <br />
+              Through Touch{' '}
+              <span className="text-primary">&amp; Audio</span>
             </h1>
           </motion.div>
 
@@ -116,10 +158,10 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="flex items-center gap-4"
             >
-               <Button asChild size="lg" className="h-14 px-8 rounded-full text-base bg-orange-500 hover:bg-orange-600 text-white shadow-xl transition-all hover:-translate-y-1">
+               <Button asChild size="lg" className="h-14 px-8 rounded-full text-base text-white shadow-xl transition-all hover:-translate-y-1" style={{ backgroundColor: '#5ACB2A' }} onMouseEnter={e => e.currentTarget.style.backgroundColor='#4ab524'} onMouseLeave={e => e.currentTarget.style.backgroundColor='#5ACB2A'}>
                  <a href="#studies">Let's Collaborate!</a>
                </Button>
-               <a href="#video" className="w-12 h-12 rounded-full border-2 border-orange-200 text-orange-500 bg-orange-50 flex items-center justify-center hover:scale-110 transition-transform cursor-pointer">
+               <a href="#video" className="w-12 h-12 rounded-full border-2 text-white flex items-center justify-center hover:scale-110 transition-transform cursor-pointer" style={{ borderColor: '#0197B2', backgroundColor: '#0197B2' }}>
                  <FaPlay className="ml-1 text-sm" />
                </a>
             </motion.div>
@@ -128,10 +170,10 @@ export default function Hero() {
                initial={{ opacity: 0, x: 20 }}
                animate={{ opacity: 1, x: 0 }}
                transition={{ duration: 0.8, delay: 0.4 }}
-               className="max-w-[320px]"
+               className="max-w-[340px]"
             >
                <p className="text-gray-500 leading-relaxed font-light">
-                 Your brand's journey to creativity begins with us, where tactile tools become masterpieces of inclusive learning.
+                 Accessible education for everyone. We create tactile and audio learning tools that help visually impaired children learn independently through touch and sound.
                </p>
             </motion.div>
           </div>

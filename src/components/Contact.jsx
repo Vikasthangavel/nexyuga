@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 const contactInfo = [
   {
@@ -26,16 +28,30 @@ const contactInfo = [
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: '', email: '', subject: '', message: '' });
+    setSending(true);
+    try {
+      await addDoc(collection(db, 'enquiries'), {
+        ...form,
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error('Failed to save enquiry:', err);
+    } finally {
+      setSending(false);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    }
   };
+
 
   return (
     <section id="contact-page" className="py-24 px-6 sm:px-8 lg:px-12 bg-white relative overflow-hidden flex flex-col items-center">
@@ -139,12 +155,13 @@ export default function Contact() {
             <div className="text-center pt-4">
               <motion.button
                 type="submit"
+                disabled={sending}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-10 py-4 bg-dark text-white rounded-full font-medium shadow-xl hover:bg-dark/90 transition-all overflow-hidden relative group"
+                className="inline-flex items-center gap-2 px-10 py-4 bg-dark text-white rounded-full font-medium shadow-xl hover:bg-dark/90 transition-all overflow-hidden relative group disabled:opacity-70"
               >
                 <div className="absolute inset-0 w-1/4 h-full bg-white/10 skew-x-12 -ml-16 group-hover:animate-shimmer" />
-                <span>{submitted ? 'Message Sent' : 'Send Message'}</span>
+                <span>{submitted ? 'Message Sent' : sending ? 'Sending…' : 'Send Message'}</span>
                 {submitted ? <span className="ml-2">✓</span> : <FaPaperPlane className="ml-2 text-sm" />}
               </motion.button>
               

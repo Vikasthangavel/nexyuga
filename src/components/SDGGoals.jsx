@@ -69,11 +69,11 @@ export default function SDGGoals() {
                 style={{ backgroundColor: goal.color }}
               />
 
-              <div className="h-48 overflow-hidden relative bg-gray-100">
+              <div className="overflow-hidden relative bg-gray-100 max-h-36">
                 <img
                   src={goal.image}
                   alt={goal.title}
-                  className="w-full h-full object-cover transform opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out mix-blend-multiply"
+                  className="w-full h-auto block opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out mix-blend-multiply"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent opacity-60" />
                 
