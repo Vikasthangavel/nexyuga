@@ -364,20 +364,18 @@ export default function Hero() {
               style={{ transformStyle: 'preserve-3d' }}
             >
               <div className="relative" style={{ transform: 'translateZ(20px)' }} onMouseEnter={handleHoverFlip}>
-                <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl" style={{ height: 420 }}>
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.img
                       key={imgIndex}
                       src={heroImages[imgIndex]}
                       alt="Nexyuga Innovations – empowering visually impaired children"
-                      className="absolute inset-0 w-full h-full rounded-3xl object-cover"
+                      className="w-full h-auto rounded-3xl object-contain"
                       initial={{ rotateY: 90, opacity: 0 }}
                       animate={{ rotateY: 0, opacity: 1 }}
                       exit={{ rotateY: -90, opacity: 0 }}
                       transition={{ duration: 0.5, ease: 'easeInOut' }}
                     />
                   </AnimatePresence>
-                </div>
 
                 {/* Floating badges with 3D pop */}
                 <motion.div
@@ -398,7 +396,7 @@ export default function Hero() {
                   style={{ transform: 'translateZ(30px)' }}
                   aria-hidden="true"
                 >
-                  <span className="font-heading font-bold text-accent text-sm">ABC</span>
+                  <span className="font-heading font-bold text-accent text-sm">Nexyuga  </span>
                 </motion.div>
                 {/* Extra fun badge */}
                 <motion.div
