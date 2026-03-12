@@ -16,31 +16,5 @@ export default function EmojiRain({ count = 20 }) {
     [count]
   );
 
-  return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-      {items.map((item, i) => (
-        <motion.div
-          key={i}
-          className="absolute select-none"
-          style={{
-            left: `${item.x}%`,
-            top: -40,
-            fontSize: item.size,
-          }}
-          animate={{
-            y: ['0vh', '105vh'],
-            x: [0, item.wobble, -item.wobble, 0],
-            rotate: [0, 360],
-          }}
-          transition={{
-            y: { duration: item.duration, repeat: Infinity, delay: item.delay, ease: 'linear' },
-            x: { duration: item.duration / 2, repeat: Infinity, delay: item.delay, ease: 'easeInOut' },
-            rotate: { duration: item.duration, repeat: Infinity, delay: item.delay, ease: 'linear' },
-          }}
-        >
-          {item.emoji}
-        </motion.div>
-      ))}
-    </div>
-  );
+  return null;
 }

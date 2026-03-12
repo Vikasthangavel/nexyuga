@@ -48,17 +48,10 @@ export default function VideoSection() {
               >
                 Independence
               </motion.span>{' '}
-              Through the Magic of Touch{' '}
-              <motion.span
-                className="inline-block"
-                animate={{ scale: [1, 1.3, 1], rotate: [0, 15, -15, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                ✨
-              </motion.span>
+              Through the Magic of Touch
             </h2>
             <p className="text-dark/60 leading-relaxed mb-6">
-              Watch our story unfold — see how our tactile learning kits and audio tools are transforming classrooms and empowering visually impaired children to explore knowledge on their own terms. 🎧📚
+              Watch our story unfold — see how our tactile learning kits and audio tools are transforming classrooms and empowering visually impaired children to explore knowledge on their own terms.
             </p>
             <div className="flex items-center gap-4">
               <div className="flex -space-x-2">

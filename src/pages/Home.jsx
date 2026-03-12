@@ -13,6 +13,7 @@ import Testimonials from '../components/Testimonials';
 import Gallery from '../components/Gallery';
 import Footer from '../components/Footer';
 import EmojiRain from '../components/EmojiRain';
+import PageAnimations from '../components/PageAnimations';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,7 +78,8 @@ export default function Home() {
 
   return (
     <main className="relative">
-      {/* Subtle emoji rain in background */}
+      <PageAnimations />
+      {/* Emoji rain disabled */}
       <EmojiRain count={15} />
 
       <Navbar />

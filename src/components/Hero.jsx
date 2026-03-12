@@ -1,12 +1,59 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { FaPlay, FaArrowRight } from 'react-icons/fa';
 import { BsMusicNoteBeamed, BsStarFill } from 'react-icons/bs';
 import { TbMathSymbols } from 'react-icons/tb';
 import heroImg from '../assets/heroimage.png';
 import heroImg2 from '../assets/heroimage2.png';
 
-const heroImages = [heroImg, heroImg2];
+/* ── Count-up stat card ──────────────────────────────────────── */
+function CountStat({ target, suffix, label, color, delay }) {
+  const count = useMotionValue(0);
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const controls = animate(count, target, {
+            duration: 1.8,
+            delay,
+            ease: 'easeOut',
+            onUpdate: (v) => setDisplay(Math.round(v)),
+          });
+          return () => controls.stop();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay, type: 'spring', stiffness: 200 }}
+      whileHover={{ scale: 1.08, y: -4 }}
+      className="group cursor-default px-5 py-3 rounded-2xl border"
+      style={{ borderColor: color + '30', backgroundColor: color + '08' }}
+    >
+      <p className="font-heading text-2xl font-extrabold" style={{ color }}>
+        {display}{suffix}
+      </p>
+      <p className="text-xs text-dark/50 mt-0.5 font-medium">{label}</p>
+    </motion.div>
+  );
+}
+
+/* ── Cycling words ───────────────────────────────────────────── */
+const CYCLING_WORDS = ['Independence', 'Confidence', 'Joy', 'Growth'];
+
 
 const floatingItems = [
   { icon: 'A', x: '10%', y: '20%', delay: 0, color: '#5ACB2A', size: 'text-4xl' },
@@ -22,11 +69,19 @@ const floatingItems = [
 
 /* 3D wiggle spring config */
 const wiggleTransition = { type: 'spring', stiffness: 300, damping: 10 };
+const heroImages = [heroImg, heroImg2];
 
 export default function Hero() {
   const [buttonHovered, setButtonHovered] = useState(null);
   const [imgIndex, setImgIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(0);
   const timerRef = useRef(null);
+
+  // word-cycle every 2.5 s
+  useEffect(() => {
+    const id = setInterval(() => setWordIndex((w) => (w + 1) % CYCLING_WORDS.length), 2500);
+    return () => clearInterval(id);
+  }, []);
 
   const resetTimer = () => {
     clearInterval(timerRef.current);
@@ -127,23 +182,7 @@ export default function Hero() {
         <TbMathSymbols size={35} />
       </motion.div>
 
-      {/* Fun bouncing emoji */}
-      <motion.div
-        className="absolute top-[15%] left-[45%] text-3xl pointer-events-none"
-        animate={{ y: [0, -30, 0], rotate: [0, -10, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-        aria-hidden="true"
-      >
-        🎈
-      </motion.div>
-      <motion.div
-        className="absolute bottom-[15%] right-[25%] text-2xl pointer-events-none"
-        animate={{ y: [0, -20, 0], scale: [1, 1.5, 1] }}
-        transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-        aria-hidden="true"
-      >
-        🦋
-      </motion.div>
+
 
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -166,7 +205,7 @@ export default function Hero() {
                 animate={{ scale: [1, 1.5, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
-              Social Impact Startup 🌍
+              Social Impact Startup
             </motion.span>
 
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-dark leading-tight mb-6">
@@ -178,15 +217,19 @@ export default function Hero() {
               >
                 Empowering{' '}
               </motion.span>
-              <motion.span
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, type: 'spring', stiffness: 150 }}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary inline-block"
-                style={{ WebkitBackgroundClip: 'text' }}
-              >
-                Independence
-              </motion.span>{' '}
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={wordIndex}
+                  initial={{ opacity: 0, y: 30, rotateX: -60 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  exit={{ opacity: 0, y: -30, rotateX: 60 }}
+                  transition={{ duration: 0.45, type: 'spring', stiffness: 180 }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary inline-block"
+                  style={{ WebkitBackgroundClip: 'text', display: 'inline-block', perspective: 400 }}
+                >
+                  {CYCLING_WORDS[wordIndex]}
+                </motion.span>
+              </AnimatePresence>{' '}
               <motion.span
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -223,7 +266,7 @@ export default function Hero() {
               transition={{ delay: 0.8 }}
               className="text-lg text-dark/60 mb-8 max-w-lg leading-relaxed"
             >
-              Accessible education for everyone. We create tactile and audio learning tools that help visually impaired children learn independently through touch and sound. 🎧📚
+              Accessible education for everyone. We create tactile and audio learning tools that help visually impaired children learn independently through touch and sound.
             </motion.p>
 
             <motion.div
@@ -273,29 +316,21 @@ export default function Hero() {
               </motion.a>
             </motion.div>
 
-            {/* Quick stats with count-up feel 
-            <div className="flex gap-8 mt-10">
+            {/* Animated stats strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+              className="flex flex-wrap gap-6 mt-10"
+            >
               {[
-                { num: '500+', label: 'Children Helped', emoji: '👧' },
-                { num: '10+', label: 'Learning Tools', emoji: '🧰' },
-                { num: '5+', label: 'States Reached', emoji: '🗺️' },
+                { target: 500, suffix: '+', label: 'Children Helped', color: '#0197B2' },
+                { target: 10, suffix: '+', label: 'Learning Tools', color: '#5ACB2A' },
+                { target: 5, suffix: '+', label: 'States Reached', color: '#06B6D4' },
               ].map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0, rotateZ: -20 }}
-                  animate={{ opacity: 1, scale: 1, rotateZ: 0 }}
-                  transition={{ delay: 1.2 + i * 0.2, type: 'spring', stiffness: 200 }}
-                  whileHover={{ scale: 1.15, rotate: [0, -3, 3, 0] }}
-                  className="cursor-default"
-                >
-                  <p className="font-heading text-2xl font-bold text-dark flex items-center gap-1">
-                    <span>{stat.emoji}</span> {stat.num}
-                  </p>
-                  <p className="text-sm text-dark/50">{stat.label}</p>
-                </motion.div>
+                <CountStat key={i} {...stat} delay={1.2 + i * 0.2} />
               ))}
-            </div>
-            */}
+            </motion.div>
           </motion.div>
 
           {/* Right – 3D Illustration */}
@@ -371,9 +406,7 @@ export default function Hero() {
                   transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
                   className="absolute top-1/2 -right-6 w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center text-lg"
                   aria-hidden="true"
-                >
-                  🎓
-                </motion.div>
+                />
               </div>
             </motion.div>
           </motion.div>

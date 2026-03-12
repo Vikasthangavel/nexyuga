@@ -37,13 +37,6 @@ export default function Journey() {
                 whileHover={{ scale: 1.1, rotate: -3 }}
               >
                 Movement
-              </motion.span>{' '}
-              <motion.span
-                className="inline-block"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                🌟
               </motion.span>
             </h2>
             <p className="text-dark/60 leading-relaxed mb-4">

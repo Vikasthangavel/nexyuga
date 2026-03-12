@@ -61,18 +61,11 @@ export default function SDGGoals() {
             Sustainable Development Goals
           </span>
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-dark">
-            Aligned with <span className="text-primary">Global Goals</span>{' '}
-            <motion.span
-              className="inline-block"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              🌍
-            </motion.span>
+            Aligned with <span className="text-primary">Global Goals</span>
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {goals.map((goal, i) => (
             <motion.div
               key={i}
@@ -80,10 +73,10 @@ export default function SDGGoals() {
               whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.6, delay: i * 0.15, type: 'spring' }}
-              className="group relative cursor-pointer"
+              className="group relative cursor-pointer h-full"
               onClick={() => setFlipped(flipped === i ? null : i)}
             >
-              <div className="relative w-full" style={{ height: 440 }}>
+              <div className="relative w-full h-full" style={{ minHeight: 420 }}>
                 <AnimatePresence mode="wait" initial={false}>
                   {flipped !== i ? (
                     /* Front face */

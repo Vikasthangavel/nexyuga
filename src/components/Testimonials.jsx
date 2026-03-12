@@ -2,45 +2,60 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaChevronRight, FaQuoteLeft, FaStar, FaStarHalfAlt } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
+import t1 from '../assets/testimonials/1.svg';
+import t2 from '../assets/testimonials/2.svg';
+import t3 from '../assets/testimonials/5.svg';
+import t4 from '../assets/testimonials/4.svg';
+import t5 from '../assets/testimonials/3.svg';
 
 const testimonials = [
   {
-    quote: 'This will help children learn easily – such a nice product. The tactile elements are thoughtfully designed and kids absolutely love them.',
-    name: 'Dr. Priya Sharma',
-    designation: 'Special Educator',
+    quote: 'Out of scale 10, I’ll give 11 — it’s that impactful! I love this product.',
+    name: 'DR.T K Bansal',
+    designation: 'Special Trustee and Founder - Blind to Visionaries Trust',
     location: 'Chennai',
-    image: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Priya&backgroundColor=b6e3f4&top=hijab&skinColor=brown',
+    image: t1,
     color: '#0197B2',
     rating: 5,
     tag: 'Education',
   },
   {
-    quote: 'My daughter can now study independently. The braille-audio combination is a game changer for our family. We are forever grateful.',
-    name: 'Rajesh Kumar',
-    designation: 'Parent',
+    quote: 'As a librarian, I’m amazed, these tactile books make reading more inclusive and joyful for all learners,it will help our children alot”',
+    name: 'Librarian',
+    designation: 'Librarian',
     location: 'Coimbatore',
-    image: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Rajesh&backgroundColor=c0aede&top=shortRound&skinColor=brown',
+    image: t2,
     color: '#5ACB2A',
     rating: 5,
-    tag: 'Parent',
+    tag: 'Library',
   },
   {
-    quote: 'Nexyuga has made inclusive education a reality. Their innovation bridges a critical gap that existed in our education system for decades.',
-    name: 'Anita Desai',
-    designation: 'NGO Director',
+    quote: 'This is what true inclusive education really means — a great product!!',
+    name: 'Menaga',
+    designation: 'Psychologist, Agam Wellness Center',
     location: 'Bengaluru',
-    image: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Anita&backgroundColor=ffd5dc&top=long&skinColor=light',
+    image: t3,
     color: '#06B6D4',
     rating: 5,
-    tag: 'Social Impact',
+    tag: 'Psychologist',
   },
   {
-    quote: 'The quality and care put into each learning tool is remarkable. It truly empowers the children and gives them confidence to learn.',
-    name: 'Prof. Sundar Raman',
-    designation: 'Accessibility Researcher',
+    quote: 'I see how this can bridge gaps in access and empower every child to learn.',
+    name: 'Akshay saxena',
+    designation: 'Co-Founder - Avanti Fellows',
     location: 'Delhi',
-    image: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Sundar&backgroundColor=d1d4f9&top=shortFlat&facialHair=beardLight&skinColor=brown',
-    color: '#14B8A6',
+    image: t4,
+    color: '#5ACB2A',
+    rating: 4.5,
+    tag: 'Research',
+  },
+  {
+    quote: 'This will help children learn easily - such a nice product!',
+    name: 'Kaviraj Prithvi',
+    designation: 'Founder - Udot',
+    location: 'Delhi',
+    image: t5,
+    color: '#64e7d7ff',
     rating: 4.5,
     tag: 'Research',
   },
@@ -150,20 +165,6 @@ export default function Testimonials() {
         aria-hidden="true"
       />
 
-      {/* Floating subtle icons */}
-      {['💬', '⭐', '❤️', '🎓', '📚'].map((e, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-xl pointer-events-none opacity-[0.07]"
-          style={{ left: `${8 + i * 20}%`, top: `${15 + (i % 3) * 25}%` }}
-          animate={{ y: [0, -18, 0], rotate: [0, 20, -20, 0] }}
-          transition={{ duration: 5 + i * 1.5, repeat: Infinity, delay: i * 0.4 }}
-          aria-hidden="true"
-        >
-          {e}
-        </motion.div>
-      ))}
-
       {/* Floating reaction emojis */}
       <AnimatePresence>
         {reactions.map((r) => (
@@ -205,13 +206,6 @@ export default function Testimonials() {
               transition={{ duration: 2, repeat: Infinity }}
             >
               Say
-            </motion.span>{' '}
-            <motion.span
-              className="inline-block"
-              animate={{ scale: [1, 1.25, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              💖
             </motion.span>
           </h2>
           <p className="text-dark/45 mt-3 max-w-md mx-auto text-sm">

@@ -12,6 +12,14 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import fg1 from '../assets/gallery/empower-iit-delhi.jpg';
+import fg2 from '../assets/gallery/jbf-bharat-impact.jpg';
+import fg3 from '../assets/gallery/pilot-akshay-saxena.jpg';
+import fg4 from '../assets/gallery/pilot-pramod-s.png';
+import fg5 from '../assets/gallery/1.jpg';
+import fg6 from '../assets/gallery/2.jpg';
+
+const footerGallery = [fg1, fg2, fg3, fg4, fg5, fg6];
 
 const exploreLinks = [
   { name: 'Home' },
@@ -56,19 +64,7 @@ export default function Footer() {
         aria-hidden="true"
       />
 
-      {/* Fun floating emojis in footer */}
-      {['🌟', '📚', '🎵', '💡', '🎓'].map((e, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-xl pointer-events-none opacity-10"
-          style={{ left: `${10 + i * 20}%`, top: `${20 + (i % 3) * 20}%` }}
-          animate={{ y: [0, -15, 0], rotate: [0, 180, 360] }}
-          transition={{ duration: 6 + i, repeat: Infinity, delay: i * 0.5 }}
-          aria-hidden="true"
-        >
-          {e}
-        </motion.div>
-      ))}
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
@@ -88,16 +84,6 @@ export default function Footer() {
                 transition={{ duration: 0.6 }}
                 style={{ transformStyle: 'preserve-3d' }}
               />
-              <span className="font-heading font-bold text-xl">
-                Nex<span className="text-primary-light">yuga</span>{' '}
-                <motion.span
-                  className="inline-block"
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  ✨
-                </motion.span>
-              </span>
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6">
               Creating inclusive learning experiences through tactile and audio innovations. 🎧📚
@@ -125,7 +111,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h3 className="font-heading font-bold text-lg mb-4">Explore 🧭</h3>
+            <h3 className="font-heading font-bold text-lg mb-4">Explore</h3>
             <ul className="space-y-2">
               {exploreLinks.map((link, i) => (
                 <li key={link.name}>
@@ -164,7 +150,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="font-heading font-bold text-lg mb-4">Quick Links 🔗</h3>
+            <h3 className="font-heading font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -203,30 +189,25 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="font-heading font-bold text-lg mb-4">Gallery 📸</h3>
+            <h3 className="font-heading font-bold text-lg mb-4">Gallery</h3>
             <div className="grid grid-cols-3 gap-2">
-              {['#0197B2', '#5ACB2A', '#06B6D4', '#14B8A6', '#10B981', '#0EA5E9'].map((c, i) => (
+              {footerGallery.map((img, i) => (
                 <motion.div
                   key={i}
                   className="aspect-square rounded-lg overflow-hidden cursor-pointer"
-                  style={{ backgroundColor: c + '30' }}
                   whileHover={{
                     scale: 1.15,
-                    rotateZ: 5,
-                    boxShadow: `0 5px 20px ${c}50`,
+                    rotateZ: 3,
                     zIndex: 10,
+                    boxShadow: '0 5px 20px rgba(1,151,178,0.4)',
                   }}
-                  whileTap={{ scale: 0.9, rotateZ: -5 }}
+                  whileTap={{ scale: 0.9, rotateZ: -3 }}
                 >
-                  <svg viewBox="0 0 80 80" className="w-full h-full" aria-hidden="true">
-                    <rect width="80" height="80" fill={c} opacity="0.2" />
-                    <circle cx="40" cy="40" r="15" fill={c} opacity="0.3">
-                      <animate attributeName="r" values="15;20;15" dur="3s" repeatCount="indefinite" />
-                    </circle>
-                    <text x="40" y="45" textAnchor="middle" fontSize="20">
-                      {['📚', '🎧', '🔢', '🏫', '😊', '🎨'][i]}
-                    </text>
-                  </svg>
+                  <img
+                    src={img}
+                    alt={`Gallery ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
                 </motion.div>
               ))}
             </div>

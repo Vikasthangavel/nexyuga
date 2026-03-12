@@ -102,7 +102,6 @@ export default function Navbar() {
                 to="/contact"
                 className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-primary/40 transition-shadow"
               >
-                <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>🎯</motion.span>
                 Enquiry
               </Link>
             </motion.div>
@@ -160,7 +159,7 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="block mx-4 mt-3 px-5 py-3 bg-gradient-to-r from-primary to-primary-dark text-white text-center font-semibold rounded-full"
                 >
-                  🎯 Enquiry
+                  Enquiry
                 </Link>
               </motion.div>
             </div>
