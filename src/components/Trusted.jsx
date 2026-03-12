@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import imgMain from '../assets/startup/Sub 4.png';
-import imgSub1 from '../assets/startup/Sub 3.png';
-import imgSub2 from '../assets/startup/Sub 2.png';
-import imgSub3 from '../assets/startup/Sub 1.png';
-import imgSub4 from '../assets/startup/Sub 2.png';
+import imgMain from '../assets/Startup/Sub 4.png';
+import imgSub1 from '../assets/Startup/Sub 3.png';
+import imgSub2 from '../assets/Startup/Sub 2.png';
+import imgSub3 from '../assets/Startup/Sub 1.png';
+import imgSub4 from '../assets/Startup/Sub 2.png';
 
 const partners = [
   { name: 'StartupTN',     image: imgMain  },
