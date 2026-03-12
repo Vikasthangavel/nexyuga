@@ -18,7 +18,7 @@ const COLORS = ['#0197B2', '#5ACB2A', '#06B6D4', '#14B8A6', '#10B981'];
 function LogoPlaceholder({ name, image, index }) {
   return (
     <motion.div
-      className="flex-shrink-0 mx-6 sm:mx-10 flex items-center gap-3 px-6 py-3 bg-white rounded-2xl shadow-sm border border-gray-100 relative group"
+      className="flex-shrink-0 mx-6 sm:mx-10 flex items-center justify-center px-6 py-3 bg-white rounded-2xl shadow-sm border border-gray-100 relative group"
       whileHover={{
         scale: 1.12,
         rotateY: 8,
@@ -40,13 +40,12 @@ function LogoPlaceholder({ name, image, index }) {
       />
 
       <motion.div
-        className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"
-        whileHover={{ rotate: 10, scale: 1.15 }}
+        className="w-28 h-12 flex items-center justify-center"
+        whileHover={{ scale: 1.1 }}
         transition={{ type: 'spring', stiffness: 400 }}
       >
-        <img src={image} alt={name} className="w-full h-full object-contain" />
+        <img src={image} alt={name} className="max-w-full max-h-full object-contain" />
       </motion.div>
-      <span className="font-heading font-semibold text-dark/70 text-sm whitespace-nowrap">{name}</span>
     </motion.div>
   );
 }
