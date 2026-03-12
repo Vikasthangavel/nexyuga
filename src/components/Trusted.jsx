@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import imgMain from '../assets/startup/Sub 4.png';
-import imgSub1 from '../assets/startup/Sub 3.png';
-import imgSub2 from '../assets/startup/Sub 2.png';
-import imgSub3 from '../assets/startup/Sub 1.png';
-import imgSub4 from '../assets/startup/Sub 2.png';
+import imgMain from '../assets/Startup/Sub 4.png';
+import imgSub1 from '../assets/Startup/Sub 3.png';
+import imgSub2 from '../assets/Startup/Sub 2.png';
+import imgSub3 from '../assets/Startup/Sub 1.png';
+import imgSub4 from '../assets/Startup/Sub 2.png';
 
 const partners = [
   { name: 'StartupTN',     image: imgMain  },
@@ -16,6 +16,7 @@ const partners = [
 function LogoPlaceholder({ name, image }) {
   return (
     <motion.div
+<<<<<<< HEAD
       className="flex-shrink-0 mx-8 flex items-center justify-center w-40 h-20 bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50 relative group transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
       whileHover={{ y: -4 }}
       aria-label={`Partner: ${name}`}
@@ -27,6 +28,36 @@ function LogoPlaceholder({ name, image }) {
           className="max-w-full max-h-full object-contain transition-all duration-500 hover:scale-105" 
         />
       </div>
+=======
+      className="flex-shrink-0 mx-6 sm:mx-10 flex items-center justify-center px-6 py-3 bg-white rounded-2xl shadow-sm border border-gray-100 relative group"
+      whileHover={{
+        scale: 1.12,
+        rotateY: 8,
+        rotateX: -4,
+        boxShadow: `0 20px 50px ${COLORS[index % COLORS.length]}30`,
+        borderColor: COLORS[index % COLORS.length] + '60',
+      }}
+      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+      style={{ perspective: 600 }}
+      aria-label={`Partner: ${name}`}
+    >
+      {/* Pulsing halo ring on hover */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl pointer-events-none"
+        style={{ border: `2px solid ${COLORS[index % COLORS.length]}` }}
+        initial={{ opacity: 0, scale: 0.85 }}
+        whileHover={{ opacity: [0, 0.6, 0], scale: [0.85, 1.08, 1.15] }}
+        transition={{ duration: 0.8, repeat: Infinity }}
+      />
+
+      <motion.div
+        className="w-28 h-12 flex items-center justify-center"
+        whileHover={{ scale: 1.1 }}
+        transition={{ type: 'spring', stiffness: 400 }}
+      >
+        <img src={image} alt={name} className="max-w-full max-h-full object-contain" />
+      </motion.div>
+>>>>>>> fcfcf5d22e9d51d640cd6a2b8a40887a2e0c4abf
     </motion.div>
   );
 }
