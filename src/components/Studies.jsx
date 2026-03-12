@@ -211,122 +211,29 @@ export default function Studies() {
         </div>
 
         {/* ── Subject Cards ────────────────────────────────── */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* ── Sub-Sections (Subjects) - Clean Layout (Image 3) ────────────────────────────────── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-16 max-w-5xl mx-auto">
           {subjects.map((subject, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 60, rotateX: 20, scale: 0.8 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.6, delay: i * 0.12, type: 'spring', stiffness: 150 }}
-              whileHover={{
-                y: -15,
-                rotateX: -5,
-                rotateY: 5,
-                scale: 1.05,
-                transition: { type: 'spring', stiffness: 300, damping: 15 },
-              }}
-              whileTap={{
-                scale: 0.95,
-                rotateX: 10,
-                transition: { type: 'spring' },
-              }}
-              onClick={() => setTappedCard(tappedCard === i ? null : i)}
-              className="group cursor-pointer"
-              style={{ perspective: 800 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -4, shadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}
+              className="flex flex-col items-center justify-center p-6 sm:p-8 bg-white border border-gray-100/80 shadow-sm rounded-3xl transition-all duration-300 relative overflow-hidden group cursor-default"
             >
-              <div
-                className="relative rounded-3xl p-6 h-full border-2 transition-all duration-300 hover:shadow-2xl overflow-hidden"
-                style={{
-                  backgroundColor: subject.bgColor,
-                  borderColor: subject.borderColor,
-                  transformStyle: 'preserve-3d',
-                }}
+              {/* Soft pastel icon wrapper */}
+              <div 
+                className="w-20 h-20 sm:w-[90px] sm:h-[90px] rounded-[1.4rem] flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-105 shadow-inner" 
+                style={{ backgroundColor: subject.bgColor }}
               >
-                {/* 3D floating illustration with bounce */}
-                <motion.div
-                  animate={{
-                    y: [0, -12, 0],
-                    rotate: [0, 8, -8, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{ duration: 3 + i * 0.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="mb-4 overflow-hidden rounded-2xl"
-                  style={{ transform: 'translateZ(30px)' }}
-                  aria-hidden="true"
-                >
-                  <img
-                    src={subject.illustration}
-                    alt={subject.title}
-                    className="w-full h-36 object-cover rounded-2xl"
-                  />
-                </motion.div>
-
-                {/* Flying mini-emojis on tap */}
-                {tappedCard === i && subject.funEmojis.map((emoji, j) => (
-                  <motion.span
-                    key={j}
-                    className="absolute text-xl pointer-events-none"
-                    initial={{ x: '50%', y: '50%', opacity: 1, scale: 0 }}
-                    animate={{
-                      x: `${20 + j * 20}%`,
-                      y: `${-20 - j * 15}%`,
-                      opacity: [1, 1, 0],
-                      scale: [0, 1.5, 0.5],
-                      rotate: [0, 180 + j * 90],
-                    }}
-                    transition={{ duration: 1, delay: j * 0.1 }}
-                  >
-                    {emoji}
-                  </motion.span>
-                ))}
-
-                {/* Icon with 3D spin on hover */}
-                <motion.div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ backgroundColor: subject.color + '20', transform: 'translateZ(20px)' }}
-                  whileHover={{ rotateY: 360, scale: 1.2 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <subject.icon size={22} style={{ color: subject.color }} />
-                </motion.div>
-
-                <h3 className="font-heading text-lg font-bold text-dark mb-2" style={{ transform: 'translateZ(15px)' }}>
-                  {subject.title}
-                </h3>
-                <p className="text-dark/60 text-sm leading-relaxed" style={{ transform: 'translateZ(10px)' }}>
-                  {subject.description}
-                </p>
-
-                {/* Animated bottom bar */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1.5 rounded-b-3xl"
-                  style={{ backgroundColor: subject.color }}
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-
-                {/* Corner spinning decoration */}
-                <motion.div
-                  className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-15"
-                  style={{ backgroundColor: subject.color }}
-                  animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                  aria-hidden="true"
-                />
-
-                {/* Fun "NEW" badge on first card */}
-                {i === 0 && (
-                  <motion.div
-                    className="absolute top-3 right-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full shadow-md"
-                    animate={{ rotate: [0, -5, 5, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    NEW! ✨
-                  </motion.div>
-                )}
+                <subject.icon className="text-4xl sm:text-[2.75rem]" style={{ color: subject.color }} />
               </div>
+
+              <h3 className="font-heading font-bold text-dark text-lg sm:text-xl text-center group-hover:text-primary transition-colors tracking-wide">
+                {subject.title}
+              </h3>
             </motion.div>
           ))}
         </div>

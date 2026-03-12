@@ -1,150 +1,101 @@
 import { motion } from 'framer-motion';
-import { FaArrowRight } from 'react-icons/fa';
-import journeyImg from '../assets/image2.jpeg';
 
-const milestones = [
-  { year: '2022', label: 'Idea Born 💡', color: '#5ACB2A' },
-  { year: '2023', label: 'First Prototype 🧪', color: '#06B6D4' },
-  { year: '2024', label: 'Award Winning 🏆', color: '#0197B2' },
-  { year: '2025', label: 'Scaling Up 🚀', color: '#14B8A6' },
+const steps = [
+  {
+    num: '01.',
+    title: 'Idea Born',
+    desc: 'Nexyuga Innovations was born from a simple yet powerful idea — every child deserves the chance to learn, explore, and grow, regardless of physical ability.',
+    timeline: '2022',
+  },
+  {
+    num: '02.',
+    title: 'First Prototype',
+    desc: 'We designed the first tactile learning kits and audio-enhanced study tools to make education a joyful, independent experience for visually impaired children.',
+    timeline: '2023',
+  },
+  {
+    num: '03.',
+    title: 'Award Winning',
+    desc: 'Working closely with educators and accessibility experts, our tools gained recognition for bridging the gap in inclusive education.',
+    timeline: '2024',
+  },
+  {
+    num: '04.',
+    title: 'Scaling Up',
+    desc: 'Our journey has taken us across multiple states, touching the lives of hundreds of young learners and continuously expanding our reach.',
+    timeline: '2025+',
+  },
 ];
 
 export default function Journey() {
   return (
-    <section id="journey" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" aria-label="Our Journey">
-      <div className="absolute -left-20 top-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 rounded-full blur-3xl" aria-hidden="true" />
+    <section 
+      id="journey" 
+      className="py-32 px-6 sm:px-8 bg-[#0b0d10] relative overflow-hidden flex flex-col items-center font-sans" 
+      aria-label="Our Story"
+    >
+      <div className="max-w-4xl w-full mx-auto relative z-10">
+        
+        {/* Header */}
+        <div className="text-center mb-24">
+          <h2 className="text-4xl md:text-5xl lg:text-[56px] font-bold text-white tracking-tight mb-6 leading-tight">
+            4 easy steps to <br /> get started
+          </h2>
+          <p className="text-gray-400 text-lg font-light leading-relaxed max-w-xl mx-auto">
+            Our progressive method blends innovation and empathy while keeping accessibility at the core.
+          </p>
+        </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left – Text with stagger */}
-          <motion.div
-            initial={{ opacity: 0, x: -80, rotateY: -10 }}
-            whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, type: 'spring' }}
-            style={{ perspective: 800 }}
-          >
-            <motion.span
-              className="inline-block px-4 py-1.5 bg-secondary/10 text-secondary rounded-full text-sm font-medium mb-4"
-              whileHover={{ scale: 1.1, rotate: 3 }}
-            >
-              Our Story 📖
-            </motion.span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-dark mb-6 leading-tight">
-              From a Vision to a{' '}
-              <motion.span
-                className="text-primary inline-block"
-                whileHover={{ scale: 1.1, rotate: -3 }}
-              >
-                Movement
-              </motion.span>
-            </h2>
-            <p className="text-dark/60 leading-relaxed mb-4">
-              Nexyuga Innovations was born from a simple yet powerful idea — every child deserves the chance to learn, explore, and grow, regardless of physical ability. We design tactile learning kits and audio-enhanced study tools that make education a joyful, independent experience for visually impaired children.
-            </p>
-            <p className="text-dark/60 leading-relaxed mb-6">
-              Working closely with educators, parents, and accessibility experts, our journey has taken us across multiple states, touching the lives of hundreds of young learners.
-            </p>
+        {/* Timeline Container */}
+        <div className="relative">
+          
+          {/* Vertical Line track */}
+          <div className="absolute left-[24px] md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-[#b5e32a] rounded-full shadow-[0_0_15px_#b5e32a]" />
 
-            {/* Fun milestone timeline */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              {milestones.map((m, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.15, type: 'spring', stiffness: 300 }}
-                  whileHover={{
-                    scale: 1.15,
-                    rotateZ: [-3, 3, 0],
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-                  }}
-                  className="px-4 py-2 rounded-2xl text-white text-sm font-bold shadow-md cursor-default"
-                  style={{ backgroundColor: m.color }}
-                >
-                  {m.year} — {m.label}
-                </motion.div>
-              ))}
-            </div>
+          <div className="space-y-16 md:space-y-24">
+            {steps.map((step, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <div key={i} className={`relative flex flex-col md:flex-row items-center ${isEven ? 'md:flex-row-reverse' : ''}`}>
+                  
+                  {/* The central indicator node */}
+                  <div className="absolute left-[24px] md:left-1/2 w-10 h-10 md:w-12 md:h-12 bg-[#b5e32a] rounded-full flex items-center justify-center -translate-x-1/2 z-10 text-[#0b0d10] font-bold text-lg border-4 border-[#0b0d10]">
+                    {i + 1}
+                  </div>
 
-            <motion.a
-              href="#studies"
-              whileHover={{
-                scale: 1.08,
-                boxShadow: '0 0 30px rgba(1,151,178,0.5)',
-              }}
-              whileTap={{ scale: 0.92 }}
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-primary to-primary-dark text-white font-semibold rounded-full shadow-lg shadow-primary/20"
-            >
-              Explore More
-              <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity }}>
-                <FaArrowRight className="text-sm" />
-              </motion.span>
-            </motion.a>
-          </motion.div>
+                  {/* Spacer for alternating layout on desktop */}
+                  <div className="hidden md:block w-1/2" />
+                  
+                  {/* Content Box with 3D Scroll Flip */}
+                  <div className={`w-full md:w-1/2 pl-16 md:pl-0 ${isEven ? 'md:pr-16 lg:pr-24' : 'md:pl-16 lg:pl-24'} perspective-[1500px]`}>
+                    <motion.div 
+                      initial={{ opacity: 0, rotateY: isEven ? 90 : -90, x: isEven ? -50 : 50 }}
+                      whileInView={{ opacity: 1, rotateY: 0, x: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="bg-[#14161a] rounded-[20px] p-6 md:p-8 hover:shadow-[0_10px_30px_rgba(181,227,42,0.1)] transition-shadow border border-white/5"
+                    >
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="flex items-center gap-3">
+                          <span className="text-gray-500 font-medium text-xl md:text-2xl">{step.num}</span>
+                          <h3 className="text-white font-bold text-xl md:text-2xl">{step.title}</h3>
+                        </div>
+                        <div className="inline-block px-3 py-1 bg-[#0b0d10] text-gray-400 text-xs font-semibold rounded-md border border-white/5">
+                          {step.timeline}
+                        </div>
+                      </div>
 
-          {/* Right – Image with 3D tilt & bounce */}
-          <motion.div
-            initial={{ opacity: 0, x: 80, rotateY: 10 }}
-            whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, delay: 0.2, type: 'spring' }}
-            className="relative"
-            style={{ perspective: 1000 }}
-          >
-            <motion.div
-              animate={{
-                y: [0, -15, 0],
-                rotateX: [0, 2, -2, 0],
-                rotateY: [0, -3, 3, 0],
-              }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              whileHover={{ scale: 1.02, rotateY: -5, rotateX: 3 }}
-              className="relative"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-                <img
-                  src={journeyImg}
-                  alt="Child learning with braille materials"
-                  className="w-full h-auto object-cover"
-                />
-              </div>
+                      <p className="text-gray-400 leading-relaxed font-light text-sm md:text-base">
+                        {step.desc}
+                      </p>
+                    </motion.div>
+                  </div>
 
-              {/* 3D floating badges */}
-              <motion.div
-                animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                whileHover={{ scale: 1.2, rotate: 20 }}
-                className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-xl p-3 flex items-center gap-3 border border-gray-100 cursor-pointer"
-                style={{ transform: 'translateZ(30px)' }}
-              >
-                <motion.div
-                  className="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center"
-                  animate={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <span className="text-xl">🏆</span>
-                </motion.div>
-                <div>
-                  <p className="font-heading font-bold text-sm text-dark">Award Winning</p>
-                  <p className="text-xs text-dark/50">Innovation 2024</p>
                 </div>
-              </motion.div>
+              );
+            })}
+          </div>
 
-              {/* Extra floating badge */}
-              <motion.div
-                animate={{ y: [0, -6, 0], x: [0, 3, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                whileHover={{ scale: 1.2 }}
-                className="absolute -top-3 -right-3 bg-white rounded-xl shadow-lg px-3 py-2 flex items-center gap-2 border border-gray-100"
-              >
-                <span className="text-lg">🎯</span>
-                <span className="font-heading font-bold text-xs text-primary">500+ Lives</span>
-              </motion.div>
-            </motion.div>
-          </motion.div>
         </div>
       </div>
     </section>

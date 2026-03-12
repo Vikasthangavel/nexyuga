@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 /**
- * Reusable 3D card wrapper with mouse-tracking tilt, glow ring, and fun shadow.
+ * Reusable 3D card wrapper with elegant hover scale and glow ring.
  */
 export default function Card3D({
   children,
@@ -11,26 +11,21 @@ export default function Card3D({
 }) {
   return (
     <motion.div
-      className={`card-3d-wrap ${className}`}
+      className={`card-3d-wrap group ${className}`}
       whileHover={{
-        rotateX: [-2, 2, -1, 0],
-        rotateY: [-2, 2, -1, 0],
-        scale: 1.04,
-        transition: { duration: 0.5, ease: 'easeOut' },
+        y: -4,
+        scale: 1.02,
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
       }}
-      whileTap={{ scale: 0.97, rotateX: 3 }}
-      style={{ perspective: 800, transformStyle: 'preserve-3d' }}
+      whileTap={{ scale: 0.98 }}
       {...props}
     >
-      <div
-        className="relative transition-all duration-300"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
+      <div className="relative h-full w-full transition-all duration-300">
         {children}
-        {/* Hover glow ring */}
+        {/* Subtle Hover glow ring */}
         <div
-          className="absolute -inset-1 rounded-[inherit] opacity-0 group-hover:opacity-40 transition-opacity duration-500 blur-lg -z-10"
-          style={{ background: `radial-gradient(circle, ${glowColor}40 0%, transparent 70%)` }}
+          className="absolute -inset-2 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10 mix-blend-multiply"
+          style={{ background: `radial-gradient(circle, ${glowColor}15 0%, transparent 60%)` }}
           aria-hidden="true"
         />
       </div>

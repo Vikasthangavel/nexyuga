@@ -235,8 +235,6 @@ function ScrollToTop() {
           <motion.div
             className="w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
             style={{ background: 'linear-gradient(135deg,#0197B2,#06B6D4)' }}
-            animate={{ y: [0, -3, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8">
               <path d="M12 19V5M5 12l7-7 7 7"/>
@@ -253,7 +251,6 @@ export default function PageAnimations() {
   return (
     <>
       <ScrollBar />
-      <ShootingStars />
       <CursorGlow />
       <ScrollToTop />
     </>

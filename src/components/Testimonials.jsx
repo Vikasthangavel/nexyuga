@@ -1,501 +1,185 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronLeft, FaChevronRight, FaQuoteLeft, FaStar, FaStarHalfAlt } from 'react-icons/fa';
-import { HiSparkles } from 'react-icons/hi';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useAnimation } from 'framer-motion';
+import { FaQuoteRight, FaStar } from 'react-icons/fa';
+
 import t1 from '../assets/testimonials/1.svg';
 import t2 from '../assets/testimonials/2.svg';
 import t3 from '../assets/testimonials/5.svg';
 import t4 from '../assets/testimonials/4.svg';
 import t5 from '../assets/testimonials/3.svg';
 
-const testimonials = [
-  {
-    quote: 'Out of scale 10, I’ll give 11 — it’s that impactful! I love this product.',
-    name: 'DR.T K Bansal',
-    designation: 'Special Trustee and Founder - Blind to Visionaries Trust',
-    location: 'Chennai',
-    image: t1,
-    color: '#0197B2',
-    rating: 5,
-    tag: 'Education',
-  },
-  {
-    quote: 'As a librarian, I’m amazed, these tactile books make reading more inclusive and joyful for all learners,it will help our children alot”',
-    name: 'Librarian',
-    designation: 'Librarian',
-    location: 'Coimbatore',
-    image: t2,
-    color: '#5ACB2A',
-    rating: 5,
-    tag: 'Library',
-  },
-  {
-    quote: 'This is what true inclusive education really means — a great product!!',
-    name: 'Menaga',
-    designation: 'Psychologist, Agam Wellness Center',
-    location: 'Bengaluru',
-    image: t3,
-    color: '#06B6D4',
-    rating: 5,
-    tag: 'Psychologist',
-  },
-  {
-    quote: 'I see how this can bridge gaps in access and empower every child to learn.',
-    name: 'Akshay saxena',
-    designation: 'Co-Founder - Avanti Fellows',
-    location: 'Delhi',
-    image: t4,
-    color: '#5ACB2A',
-    rating: 4.5,
-    tag: 'Research',
-  },
-  {
-    quote: 'This will help children learn easily - such a nice product!',
-    name: 'Kaviraj Prithvi',
-    designation: 'Founder - Udot',
-    location: 'Delhi',
-    image: t5,
-    color: '#64e7d7ff',
-    rating: 4.5,
-    tag: 'Research',
-  },
+const baseTestimonials = [
+  { quote: 'From start to finish, the communication was seamless and the design blew us away.', name: 'James R.', designation: 'Startup Founder', image: t1 },
+  { quote: 'Creative direction, speed, and polish were all first class from kickoff to launch.', name: 'Elisa M.', designation: 'Product Lead', image: t2 },
+  { quote: 'The final brand system felt premium and clear, and our customer trust improved quickly.', name: 'Daniel C.', designation: 'Marketing Head', image: t3 },
+  { quote: 'Absolutely incredible attention to detail. Everything was delivered smoothly.', name: 'Sarah W.', designation: 'Director', image: t4 },
+  { quote: 'Their modern approach to design helped our platform grow exponentially.', name: 'Michael B.', designation: 'CEO', image: t5 },
+  { quote: 'Professional team with amazing communication. Never left us in the dark.', name: 'Emma T.', designation: 'Manager', image: t1 },
+  { quote: 'Fantastic UI and animation quality. The micro-interactions feel deeply organic.', name: 'Noah G.', designation: 'Engineer', image: t2 },
+  { quote: 'Their creative ideas impressed our entire team. Such a phenomenal transformation.', name: 'Mia P.', designation: 'UX Specialist', image: t3 },
 ];
 
-const reactionEmojis = ['❤️', '👏', '🙌', '⭐', '🎉', '✨', '💖', '🌈'];
+// Dynamically pad the testimonials array to 24 so the massive 1050px wheel is fully and smoothly populated.
+const testimonials = Array.from({ length: 24 }, (_, i) => ({
+  ...baseTestimonials[i % baseTestimonials.length],
+  originalIndex: i % baseTestimonials.length,
+}));
 
-function StarRating({ rating, delay = 0 }) {
-  const full = Math.floor(rating);
-  const hasHalf = rating % 1 !== 0;
+export default function TestimonialWheel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start bottom", "bottom top"]
+  });
+
+  // Base scroll rotation effect
+  const scrollRotation = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
+  // Infinite slow rotation state
+  const [continuousRotation, setContinuousRotation] = useState(0);
+  const isHovered = useRef(false);
+
+  useEffect(() => {
+    let animationFrame;
+    const updateRotation = () => {
+      // Gently increment rotation if not hovered for a gorgeous smooth spin
+      if (!isHovered.current) {
+        setContinuousRotation(prev => prev - 0.05); // Negative for continuous clockwise feel
+      }
+      animationFrame = requestAnimationFrame(updateRotation);
+    };
+    animationFrame = requestAnimationFrame(updateRotation);
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
+
+  // Handle window resize cleanly for circle computation
+  const [radius, setRadius] = useState(450);
+  useEffect(() => {
+    const handleResize = () => {
+      setRadius(window.innerWidth < 768 ? 300 : 450);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Combined rotation transform
+  const combinedRotation = useTransform(scrollRotation, (r) => r + continuousRotation);
+  // Counter rotation to keep avatars upright
+  const counterRotation = useTransform(combinedRotation, (r) => -r);
+
+  const centerX = 525; // half of 1050
+  const centerY = 525;
+
   return (
-    <div className="flex items-center gap-0.5">
-      {[...Array(full)].map((_, i) => (
-        <motion.span
-          key={`full-${i}`}
-          initial={{ opacity: 0, scale: 0, rotate: -180 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ delay: delay + i * 0.08, type: 'spring', stiffness: 400, damping: 12 }}
-        >
-          <FaStar className="text-amber-400 text-base" />
-        </motion.span>
-      ))}
-      {hasHalf && (
-        <motion.span
-          initial={{ opacity: 0, scale: 0, rotate: -180 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ delay: delay + full * 0.08, type: 'spring', stiffness: 400, damping: 12 }}
-        >
-          <FaStarHalfAlt className="text-amber-400 text-base" />
-        </motion.span>
-      )}
-      {[...Array(5 - full - (hasHalf ? 1 : 0))].map((_, i) => (
-        <motion.span
-          key={`empty-${i}`}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: delay + (full + (hasHalf ? 1 : 0) + i) * 0.08, type: 'spring' }}
-        >
-          <FaStar className="text-gray-200 text-base" />
-        </motion.span>
-      ))}
-      <motion.span
-        className="ml-2 text-xs font-bold text-dark/40"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: delay + 0.5 }}
+    <section ref={containerRef} className="py-24 bg-[#080a0f] relative font-sans flex items-center justify-center">
+      <div 
+        className="w-full max-w-[1100px] h-[620px] md:h-[540px] relative overflow-hidden rounded-2xl mx-auto shadow-2xl" 
+        style={{ background: 'radial-gradient(circle at center, #10141e 0%, #07090d 70%)' }}
+        onMouseEnter={() => { isHovered.current = true; }}
+        onMouseLeave={() => { isHovered.current = false; }}
       >
-        {rating}/5
-      </motion.span>
-    </div>
-  );
-}
-
-export default function Testimonials() {
-  const [current, setCurrent] = useState(0);
-  const [reactions, setReactions] = useState([]);
-  const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      setDirection(1);
-      setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [isPaused]);
-
-  useEffect(() => {
-    const newReactions = Array.from({ length: 6 }, (_, i) => ({
-      id: Date.now() + i,
-      emoji: reactionEmojis[Math.floor(Math.random() * reactionEmojis.length)],
-      x: 15 + Math.random() * 70,
-    }));
-    setReactions(newReactions);
-    const timeout = setTimeout(() => setReactions([]), 2500);
-    return () => clearTimeout(timeout);
-  }, [current]);
-
-  const goPrev = useCallback(() => {
-    setDirection(-1);
-    setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
-  }, []);
-
-  const goNext = useCallback(() => {
-    setDirection(1);
-    setCurrent((c) => (c + 1) % testimonials.length);
-  }, []);
-
-  const t = testimonials[current];
-
-  const slideVariants = {
-    enter: (dir) => ({ opacity: 0, x: dir > 0 ? 120 : -120, rotateY: dir > 0 ? 25 : -25, scale: 0.92 }),
-    center: { opacity: 1, x: 0, rotateY: 0, scale: 1 },
-    exit: (dir) => ({ opacity: 0, x: dir > 0 ? -120 : 120, rotateY: dir > 0 ? -25 : 25, scale: 0.92 }),
-  };
-
-  return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden" aria-label="Testimonials">
-      {/* Background decorations */}
-      <div className="absolute top-0 left-1/4 w-80 h-80 bg-primary/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" aria-hidden="true" />
-      <motion.div
-        className="absolute top-20 right-[10%] w-32 h-32 bg-accent/5 rounded-full blur-2xl"
-        animate={{ scale: [1, 1.3, 1], x: [0, 20, 0] }}
-        transition={{ duration: 8, repeat: Infinity }}
-        aria-hidden="true"
-      />
-
-      {/* Floating reaction emojis */}
-      <AnimatePresence>
-        {reactions.map((r) => (
-          <motion.div
-            key={r.id}
-            className="absolute text-2xl pointer-events-none z-20"
-            style={{ left: `${r.x}%`, bottom: '30%' }}
-            initial={{ y: 0, opacity: 1, scale: 0 }}
-            animate={{ y: -150, opacity: 0, scale: [0, 1.4, 1.8] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
+        
+        {/* Preview Slider (The Avatar Wheel) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1050px] pointer-events-none">
+          <motion.div 
+            className="relative w-[1050px] h-[1050px] mx-auto pointer-events-auto transition-transform duration-75"
+            style={{ rotate: combinedRotation }}
           >
-            {r.emoji}
+            {testimonials.map((t, index) => {
+              const angleStep = (2 * Math.PI) / testimonials.length;
+              // Start at top (-90deg or -PI/2) and spread evenly
+              const angle = (index * angleStep) - Math.PI / 2;
+              const x = centerX + radius * Math.cos(angle) - 50; // 50 is half of 100px width
+              const y = centerY + radius * Math.sin(angle) - 50;
+
+              // Highlighting visual relies on the actual item index vs active index.
+              const isActive = activeIndex === index;
+
+              return (
+                <div
+                  key={index}
+                  onClick={() => setActiveIndex(index)}
+                  className={`absolute w-[100px] h-[100px] rounded-full border-[8px] overflow-hidden cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+                    ${isActive ? 'border-[#d6f345] shadow-[-1.5px_7.8px_59px_0_rgba(214,243,69,0.6)] z-20 scale-110' : 'border-white/10 hover:border-[#d6f345] z-10'}
+                  `}
+                  style={{
+                    left: `${x}px`,
+                    top: `${y}px`,
+                  }}
+                >
+                  <motion.div
+                    // Counter rotate to keep avatars perfectly upright!
+                    style={{ rotate: counterRotation }}
+                    className="w-full h-full"
+                  >
+                    <img src={t.image} alt="avatar" className="w-full h-full object-cover bg-[#080a0f]" />
+                  </motion.div>
+                </div>
+              );
+            })}
           </motion.div>
-        ))}
-      </AnimatePresence>
-
-      <div className="max-w-5xl mx-auto relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-5"
-            whileHover={{ scale: 1.05 }}
-          >
-            <HiSparkles className="text-base" />
-            Testimonials
-          </motion.span>
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-dark">
-            What People{' '}
-            <motion.span
-              className="text-primary inline-block"
-              animate={{ rotate: [0, 3, -3, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              Say
-            </motion.span>
-          </h2>
-          <p className="text-dark/45 mt-3 max-w-md mx-auto text-sm">
-            Hear from educators, parents, and partners who've seen the impact firsthand
-          </p>
-        </motion.div>
-
-        {/* Mini avatar preview row */}
-        <div className="flex items-center justify-center gap-3 mb-10">
-          {testimonials.map((person, i) => (
-            <motion.button
-              key={i}
-              onClick={() => {
-                setDirection(i > current ? 1 : -1);
-                setCurrent(i);
-              }}
-              className="relative"
-              whileHover={{ scale: 1.15, y: -4 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label={`View testimonial from ${person.name}`}
-            >
-              <motion.div
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-3 transition-all duration-300 ${
-                  i === current
-                    ? 'border-primary shadow-lg shadow-primary/25 scale-110'
-                    : 'border-gray-200 opacity-50 grayscale'
-                }`}
-                animate={i === current ? { borderColor: t.color } : {}}
-                style={{ borderWidth: 3 }}
-              >
-                <img
-                  src={person.image}
-                  alt={person.name}
-                  className="w-full h-full object-cover bg-gray-100"
-                  loading="lazy"
-                />
-              </motion.div>
-              {i === current && (
-                <motion.div
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: t.color }}
-                  layoutId="activeAvatar"
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                />
-              )}
-            </motion.button>
-          ))}
         </div>
 
-        {/* Testimonial Card */}
-        <div
-          className="relative"
-          style={{ perspective: 1400 }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={current}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.55, type: 'spring', stiffness: 90, damping: 18 }}
-              className="bg-white rounded-[2rem] shadow-xl border border-gray-100/80 overflow-hidden"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <div className="grid md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-                {/* Left — Profile panel */}
-                <div
-                  className="relative p-8 flex flex-col items-center justify-center text-center overflow-hidden"
-                  style={{ background: `linear-gradient(135deg, ${t.color}12, ${t.color}08)` }}
-                >
-                  {/* Decorative circles */}
-                  <motion.div
-                    className="absolute -top-10 -left-10 w-32 h-32 rounded-full opacity-10"
-                    style={{ backgroundColor: t.color }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                    aria-hidden="true"
-                  />
-                  <motion.div
-                    className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-10"
-                    style={{ backgroundColor: t.color }}
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-                    aria-hidden="true"
-                  />
-
-                  {/* Profile Image */}
-                  <motion.div
-                    className="relative mb-5"
-                    initial={{ scale: 0, rotate: -20 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
-                  >
-                    <motion.div
-                      className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 shadow-xl mx-auto"
-                      style={{ borderColor: t.color }}
-                      whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      <img
-                        src={t.image}
-                        alt={t.name}
-                        className="w-full h-full object-cover bg-white"
-                      />
-                    </motion.div>
-                    {/* Online indicator */}
-                    <motion.div
-                      className="absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-white"
-                      style={{ backgroundColor: t.color }}
-                      animate={{ scale: [1, 1.3, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    {/* Sparkle */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 text-lg"
-                      animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.2, 1] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      ✨
-                    </motion.div>
-                  </motion.div>
-
-                  {/* Name & Designation */}
-                  <motion.h3
-                    className="font-heading font-bold text-lg text-dark mb-1"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    {t.name}
-                  </motion.h3>
-                  <motion.p
-                    className="text-sm font-medium mb-0.5"
-                    style={{ color: t.color }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.25 }}
-                  >
-                    {t.designation}
-                  </motion.p>
-                  <motion.p
-                    className="text-xs text-dark/40 flex items-center gap-1"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    📍 {t.location}
-                  </motion.p>
-
-                  {/* Tag pill */}
-                  <motion.span
-                    className="mt-4 inline-block px-3 py-1 rounded-full text-xs font-semibold text-white shadow-md"
-                    style={{ backgroundColor: t.color }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.35, type: 'spring', stiffness: 300 }}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    {t.tag}
-                  </motion.span>
-
-                  {/* Rating under profile */}
-                  <div className="mt-4">
-                    <StarRating rating={t.rating} delay={0.4} />
-                  </div>
-                </div>
-
-                {/* Right — Quote content */}
-                <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-center relative">
-                  {/* Large quote mark */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5, rotate: -15 }}
-                    animate={{ opacity: 0.08, scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.15 }}
-                    className="absolute top-6 right-8"
-                    aria-hidden="true"
-                  >
-                    <FaQuoteLeft size={80} style={{ color: t.color }} />
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <FaQuoteLeft
-                      size={24}
-                      className="mb-4 opacity-30"
-                      style={{ color: t.color }}
-                      aria-hidden="true"
-                    />
-                  </motion.div>
-
-                  <motion.blockquote
-                    className="text-lg sm:text-xl lg:text-[1.35rem] text-dark/75 leading-relaxed font-medium mb-8 relative z-10"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25, duration: 0.5 }}
-                  >
-                    "{t.quote}"
-                  </motion.blockquote>
-
-                  {/* Bottom info bar — mobile only name repeat */}
-                  <motion.div
-                    className="flex items-center gap-3 md:hidden"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <div
-                      className="w-10 h-10 rounded-full overflow-hidden border-2 flex-shrink-0"
-                      style={{ borderColor: t.color }}
-                    >
-                      <img src={t.image} alt="" className="w-full h-full object-cover bg-white" />
-                    </div>
-                    <div>
-                      <p className="font-heading font-bold text-sm text-dark">{t.name}</p>
-                      <p className="text-xs" style={{ color: t.color }}>{t.designation}, {t.location}</p>
-                    </div>
-                  </motion.div>
-
-                  {/* Decorative line */}
-                  <motion.div
-                    className="h-1 rounded-full mt-auto"
-                    style={{ backgroundColor: t.color }}
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.5, duration: 0.6 }}
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation */}
-          <div className="flex items-center justify-center gap-5 mt-10">
-            <motion.button
-              onClick={goPrev}
-              whileHover={{ scale: 1.15, backgroundColor: '#0197B2', color: '#fff', boxShadow: '0 8px 25px rgba(1,151,178,0.3)' }}
-              whileTap={{ scale: 0.85, rotate: -20 }}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all text-dark/60"
-              aria-label="Previous testimonial"
-            >
-              <FaChevronLeft size={16} />
-            </motion.button>
-
-            <div className="flex gap-2.5" role="tablist" aria-label="Testimonial indicators">
-              {testimonials.map((person, i) => (
-                <motion.button
-                  key={i}
-                  onClick={() => {
-                    setDirection(i > current ? 1 : -1);
-                    setCurrent(i);
-                  }}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: i === current ? 32 : 12,
-                    height: 12,
-                    backgroundColor: i === current ? person.color : '#D1D5DB',
-                  }}
-                  whileHover={{ scale: 1.4 }}
-                  whileTap={{ scale: 0.8 }}
-                  animate={i === current ? { scale: [1, 1.1, 1] } : {}}
-                  transition={i === current ? { duration: 1.5, repeat: Infinity } : {}}
-                  role="tab"
-                  aria-selected={i === current}
-                  aria-label={`${person.name}'s testimonial`}
-                />
-              ))}
-            </div>
-
-            <motion.button
-              onClick={goNext}
-              whileHover={{ scale: 1.15, backgroundColor: '#0197B2', color: '#fff', boxShadow: '0 8px 25px rgba(1,151,178,0.3)' }}
-              whileTap={{ scale: 0.85, rotate: 20 }}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all text-dark/60"
-              aria-label="Next testimonial"
-            >
-              <FaChevronRight size={16} />
-            </motion.button>
+        {/* Main Slider (Center Content) */}
+        <div className="absolute top-[190px] md:top-[160px] left-1/2 -translate-x-1/2 z-10 w-[calc(100%-48px)] max-w-[520px] text-center pointer-events-none">
+          <div className="text-[#d6f345] text-[50px] md:text-[70px] leading-none mb-4">
+            <FaQuoteRight className="mx-auto" />
           </div>
 
-          {/* Keyboard hint */}
-          <p className="text-center text-xs text-dark/25 mt-4">Hover to pause • Click avatars to navigate</p>
+          <div className="min-h-[140px] md:min-h-[120px] flex items-center justify-center">
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full"
+              >
+                <p className="text-white font-medium text-[18px] md:text-[22px] leading-[1.6] md:leading-[1.75]">
+                  {testimonials[activeIndex].quote}
+                </p>
+
+                {/* Animated Line */}
+                <motion.div 
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.4, duration: 1, ease: 'easeOut' }}
+                  className="mx-auto mt-[28px] h-[1px] w-[90%] opacity-20 origin-center"
+                  style={{ background: 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #fff 15%, #fff 85%, rgba(255, 255, 255, 0) 100%)' }}
+                />
+
+                {/* Rating & Author Block */}
+                <div className="mt-[28px]">
+                  <div className="flex justify-center gap-[7px] text-[#d6f345] text-[18px] mb-[10px]">
+                    {[...Array(5)].map((_, i) => (
+                      <motion.div
+                        key={`star-${i}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 + (i * 0.1), duration: 0.5 }}
+                      >
+                        <FaStar />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="text-[15px] text-white/70"
+                  >
+                    - <span className="text-white font-semibold">{testimonials[activeIndex].name}</span> {testimonials[activeIndex].designation}
+                  </motion.p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
+
       </div>
     </section>
   );

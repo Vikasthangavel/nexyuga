@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FaGraduationCap, FaHandshake, FaBalanceScale } from 'react-icons/fa';
 import sdg4Img from '../assets/SDG4.png';
 import sdg11Img from '../assets/SDG11.jpg';
@@ -12,21 +11,15 @@ const goals = [
     sdg: 'SDG 4',
     description: 'Ensuring inclusive and equitable quality education for all, promoting lifelong learning opportunities.',
     color: '#E81D2C',
-    bg: '#FDEAEA',
-    emoji: '📚',
     image: sdg4Img,
-    funFact: 'Education is the most powerful weapon!',
   },
   {
     icon: FaBalanceScale,
     title: 'Reduced Inequalities',
     sdg: 'SDG 10',
-    description: 'Reducing inequality within and among countries by empowering the differently abled.',
+    description: 'Reducing inequality within and among countries by empowering the differently abled through accessible tools.',
     color: '#DD1367',
-    bg: '#FCE4EC',
-    emoji: '⚖️',
     image: sdg11Img,
-    funFact: 'Every child deserves equal opportunity!',
   },
   {
     icon: FaHandshake,
@@ -34,125 +27,80 @@ const goals = [
     sdg: 'SDG 17',
     description: 'Strengthening the means of implementation and revitalising global partnerships for sustainable development.',
     color: '#19486A',
-    bg: '#E3F2FD',
-    emoji: '🤝',
     image: sdg17Img,
-    funFact: 'Together we go further!',
   },
 ];
 
 export default function SDGGoals() {
-  const [flipped, setFlipped] = useState(null);
-
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" aria-label="SDG Goals">
-      <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" aria-hidden="true" />
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section id="sdg" className="py-24 px-6 sm:px-8 lg:px-12 bg-gray-50/50 relative overflow-hidden flex flex-col items-center" aria-label="SDG Goals">
+      <div className="max-w-7xl w-full mx-auto relative z-10 flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 bg-accent/10 text-accent rounded-full text-sm font-medium mb-4">
-            Sustainable Development Goals
+          <span className="text-sm font-semibold tracking-widest uppercase text-primary mb-3 block">
+            Sustainability
           </span>
-          <h2 className="font-heading text-3xl sm:text-4xl font-bold text-dark">
-            Aligned with <span className="text-primary">Global Goals</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-dark tracking-tight mb-4">
+            Aligned with Global Goals
           </h2>
+          <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+            Our mission directly contributes to the United Nations Sustainable Development Goals, driving impact where it matters most.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 items-stretch">
+        <div className="grid md:grid-cols-3 gap-8 w-full">
           {goals.map((goal, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 60, rotateX: 20 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.6, delay: i * 0.15, type: 'spring' }}
-              className="group relative cursor-pointer h-full"
-              onClick={() => setFlipped(flipped === i ? null : i)}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-all duration-500 relative flex flex-col h-full"
             >
-              <div className="relative w-full h-full" style={{ minHeight: 420 }}>
-                <AnimatePresence mode="wait" initial={false}>
-                  {flipped !== i ? (
-                    /* Front face */
-                    <motion.div
-                      key="front"
-                      initial={{ rotateY: -90, opacity: 0 }}
-                      animate={{ rotateY: 0, opacity: 1 }}
-                      exit={{ rotateY: 90, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-full h-full bg-white rounded-3xl p-6 shadow-lg border border-gray-100 flex flex-col"
-                      whileHover={{
-                        y: -12,
-                        boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
-                      }}
-                    >
-                      <motion.div
-                        animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
-                        transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut' }}
-                        className="flex flex-col flex-1"
-                      >
-                        <motion.div
-                          className="mb-4 overflow-hidden rounded-2xl flex-shrink-0"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ type: 'spring', stiffness: 300 }}
-                        >
-                          <img
-                            src={goal.image}
-                            alt={goal.title}
-                            className="w-full h-32 object-cover rounded-2xl"
-                          />
-                        </motion.div>
+              {/* Subtle top border in brand color */}
+              <div 
+                className="absolute top-0 left-0 w-full h-1 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out z-20"
+                style={{ backgroundColor: goal.color }}
+              />
 
-                        <span
-                          className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"
-                          style={{ backgroundColor: goal.bg, color: goal.color }}
-                        >
-                          {goal.sdg}
-                        </span>
+              <div className="h-48 overflow-hidden relative bg-gray-100">
+                <img
+                  src={goal.image}
+                  alt={goal.title}
+                  className="w-full h-full object-cover transform opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out mix-blend-multiply"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent opacity-60" />
+                
+                <div className="absolute bottom-4 left-6 flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-sm shadow-md" style={{ color: goal.color }}>
+                     <goal.icon />
+                   </div>
+                   <span className="font-bold text-white tracking-wide text-sm drop-shadow-md">
+                     {goal.sdg}
+                   </span>
+                </div>
+              </div>
 
-                        <h3 className="font-heading text-xl font-bold text-dark mb-3">{goal.title}</h3>
-                        <p className="text-dark/60 leading-relaxed text-sm">{goal.description}</p>
-                      </motion.div>
-
-                      <p className="text-xs text-dark/30 mt-4 flex items-center gap-1">
-                        <motion.span animate={{ rotateY: [0, 360] }} transition={{ duration: 3, repeat: Infinity }}>👆</motion.span>
-                        Tap to flip!
-                      </p>
-                    </motion.div>
-                  ) : (
-                    /* Back face */
-                    <motion.div
-                      key="back"
-                      initial={{ rotateY: -90, opacity: 0 }}
-                      animate={{ rotateY: 0, opacity: 1 }}
-                      exit={{ rotateY: 90, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-full h-full rounded-3xl p-8 flex flex-col items-center justify-center text-white shadow-lg"
-                      style={{
-                        background: `linear-gradient(135deg, ${goal.color}, ${goal.color}CC)`,
-                      }}
-                    >
-                      <motion.span className="text-6xl mb-4" animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                        {goal.emoji}
-                      </motion.span>
-                      <h3 className="font-heading text-2xl font-bold mb-3">{goal.title}</h3>
-                      <p className="text-white/90 text-center text-lg font-medium italic">"{goal.funFact}"</p>
-                      <motion.p
-                        className="mt-4 text-sm text-white/60"
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        Tap to flip back 🔄
-                      </motion.p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              <div className="p-8 flex flex-col flex-grow">
+                <h3 className="font-bold text-dark text-xl mb-4 group-hover:text-primary transition-colors">
+                  {goal.title}
+                </h3>
+                <p className="text-gray-500 text-sm font-light leading-relaxed mb-6 flex-grow">
+                  {goal.description}
+                </p>
+                
+                <div className="mt-auto flex items-center gap-2 text-sm font-medium transition-colors" style={{ color: goal.color }}>
+                   <span>Learn More</span>
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transform group-hover:translate-x-1 transition-transform">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                   </svg>
+                </div>
               </div>
             </motion.div>
           ))}
