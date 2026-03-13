@@ -10,7 +10,7 @@ const navLinks = [
   { name: 'Spotlight', href: '/#video', isRoute: false },
   { name: 'Innovations', href: '/#studies', isRoute: false },
   { name: 'Careers', href: '/careers', isRoute: true },
-  { name: 'Contact Us', href: '/contact', isRoute: true },
+  { name: 'Get in touch', href: '/contact', isRoute: true },
 ];
 
 export default function Navbar() {
@@ -56,14 +56,22 @@ export default function Navbar() {
             {navLinks.map((link) => {
               const Tag = link.isRoute ? Link : 'a';
               const linkProps = link.isRoute ? { to: link.href } : { href: link.href };
+              const isActive = link.isRoute 
+                ? location.pathname === link.href
+                : location.pathname === '/' && (location.hash === link.href.replace('/', '') || (link.href === '/#home' && !location.hash));
+
               return (
                 <Tag
                   key={link.name}
                   {...linkProps}
-                  className="relative text-sm font-medium text-dark/80 hover:text-primary transition-colors group py-2"
+                  className={`relative text-sm font-medium transition-colors group py-2 ${
+                    isActive ? 'text-primary' : 'text-black hover:text-primary'
+                  }`}
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                  <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-primary transition-transform duration-300 origin-left ${
+                    isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`} />
                 </Tag>
               );
             })}
@@ -111,6 +119,10 @@ export default function Navbar() {
               {navLinks.map((link, i) => {
                 const Tag = link.isRoute ? Link : 'a';
                 const linkProps = link.isRoute ? { to: link.href } : { href: link.href };
+                const isActive = link.isRoute 
+                  ? location.pathname === link.href
+                  : location.pathname === '/' && (location.hash === link.href.replace('/', '') || (link.href === '/#home' && !location.hash));
+
                 return (
                   <motion.div
                     key={link.name}
@@ -121,7 +133,9 @@ export default function Navbar() {
                     <Tag
                       {...linkProps}
                       onClick={() => setMobileOpen(false)}
-                      className="block text-lg font-medium text-dark/80 hover:text-primary transition-colors border-b border-gray-50 pb-4"
+                      className={`block text-lg font-medium transition-colors border-b border-gray-50 pb-4 ${
+                        isActive ? 'text-primary' : 'text-black hover:text-primary'
+                      }`}
                     >
                       {link.name}
                     </Tag>

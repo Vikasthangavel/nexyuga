@@ -1,30 +1,34 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { useCollection } from '../hooks/useCollection';
 
-// 7 columns heart pattern
-const heartPattern = [
-  0, 1, 1, 0, 1, 1, 0,
-  1, 1, 1, 1, 1, 1, 1,
-  1, 1, 1, 1, 1, 1, 1,
-  0, 1, 1, 1, 1, 1, 0,
-  0, 0, 1, 1, 1, 0, 0,
-  0, 0, 0, 1, 0, 0, 0,
-];
-
-const VISIBLE_SLOTS = heartPattern.filter(s => s === 1).length; // 27
+// Standard grid layout (Removed Heart Pattern)
 
 export default function Gallery() {
   const { data, loading } = useCollection('gallery');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const thumbnailsRef = useRef(null);
+
+  // Auto-advance main photo every 5 seconds
+  useEffect(() => {
+    if (data.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % data.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [data.length]);
+  
+  // Manual scrolling for the thumbnail strip
+  const scrollThumbnails = (direction) => {
+    if (thumbnailsRef.current) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      thumbnailsRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   // If nothing uploaded yet, render nothing
   if (!loading && data.length === 0) return null;
-
-  // Tile data to fill all 27 visible heart slots
-  const filled = data.length > 0
-    ? Array.from({ length: VISIBLE_SLOTS }, (_, i) => data[i % data.length])
-    : [];
-
-  let imgIndex = 0;
 
   return (
     <section
@@ -69,58 +73,76 @@ export default function Gallery() {
           </div>
         )}
 
-        {/* Heart Grid */}
-        {!loading && filled.length > 0 && (
-          <div className="relative w-full max-w-[800px] mx-auto mt-10 p-2 sm:p-4 perspective-[1000px]">
-            {/* Outer Pulsing Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-              <motion.div
-                className="absolute w-[100%] h-[100%] rounded-full border border-primary/30"
-                animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0, 0.3] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.div
-                className="absolute w-[115%] h-[115%] rounded-full border border-primary/20"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0, 0.2] }}
-                transition={{ duration: 4, delay: 1, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.div
-                className="absolute w-[130%] h-[130%] rounded-full border border-primary/10"
-                animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0, 0.1] }}
-                transition={{ duration: 4, delay: 2, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              {/* Core glow */}
-              <motion.div
-                className="absolute w-[80%] h-[80%] bg-primary/10 blur-[80px] rounded-full"
-                animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              />
+        {/* Main Showcase & Thumbnails */}
+        {!loading && data.length > 0 && (
+          <div className="w-full max-w-[1000px] mx-auto mt-12 space-y-8">
+            {/* Main Active Photo */}
+            <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-100 bg-gray-50 flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <img
+                     src={data[activeIndex]?.imageUrl}
+                     alt={data[activeIndex]?.caption || 'Main Showcase'}
+                     className="w-full h-full object-contain bg-white"
+                  />
+                  {/* Photo DB Title Overlay */}
+                  {data[activeIndex]?.caption && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 md:p-8 pt-20">
+                      <p className="text-white font-bold text-xl md:text-3xl drop-shadow-md">
+                        {data[activeIndex].caption}
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
-            
-            <div className="relative z-10 grid grid-cols-7 gap-1 sm:gap-2 md:gap-3 lg:gap-4">
-              {heartPattern.map((slot, i) => {
-                if (slot === 0) return <div key={`empty-${i}`} className="col-span-1" />;
-                const item = filled[imgIndex % filled.length];
-                imgIndex++;
-                return (
-                  <motion.div
-                    key={`img-${i}`}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: '50px' }}
-                    transition={{ duration: 0.5, delay: Math.random() * 0.3, ease: 'easeOut' }}
-                    whileHover={{ scale: 1.15, zIndex: 10, boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
-                    className="relative group rounded-md md:rounded-xl overflow-hidden bg-gray-100 cursor-pointer shadow-sm aspect-square border border-gray-100"
+
+            {/* Thumbnail Navigation Strip */}
+            <div className="flex items-center gap-4 px-2">
+              <button 
+                onClick={() => scrollThumbnails('left')}
+                className="w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary transition-colors shrink-0"
+              >
+                <HiChevronLeft size={24} />
+              </button>
+              
+              <div 
+                ref={thumbnailsRef}
+                className="flex gap-3 overflow-x-auto snap-x snap-mandatory hide-scroll-bar pb-2"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {data.map((item, i) => (
+                  <button
+                    key={item.id || i}
+                    onClick={() => setActiveIndex(i)}
+                    className={`relative w-24 h-24 md:w-32 md:h-24 rounded-xl overflow-hidden shrink-0 snap-start transition-all duration-300 border-2 ${
+                      i === activeIndex 
+                        ? 'border-primary shadow-md scale-105 opacity-100' 
+                        : 'border-transparent opacity-50 hover:opacity-100'
+                    }`}
                   >
                     <img
                       src={item.imageUrl}
-                      alt={item.caption || 'Gallery'}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      alt={item.caption || `Thumbnail ${i + 1}`}
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors duration-300" />
-                  </motion.div>
-                );
-              })}
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                onClick={() => scrollThumbnails('right')}
+                className="w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary transition-colors shrink-0"
+              >
+                <HiChevronRight size={24} />
+              </button>
             </div>
           </div>
         )}

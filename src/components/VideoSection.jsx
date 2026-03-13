@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlay } from 'react-icons/fa';
+import { useCollection } from '../hooks/useCollection';
 
 export default function VideoSection() {
   const [playing, setPlaying] = useState(false);
+  const { data: achievements } = useCollection('achievements');
 
   return (
     <section id="video" className="py-24 px-6 sm:px-8 lg:px-12 bg-white relative overflow-hidden flex flex-col items-center" aria-label="Video spotlight">
@@ -37,17 +39,7 @@ export default function VideoSection() {
             </p>
           </div>
 
-          <div className="flex items-center gap-6 pt-6 border-t border-gray-100">
-            <div className="flex flex-col">
-              <span className="text-3xl font-bold text-dark mb-1">2K+</span>
-              <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Viewers Reached</span>
-            </div>
-            <div className="h-12 w-px bg-gray-200" />
-            <div className="flex flex-col">
-              <span className="text-3xl font-bold text-dark mb-1">100%</span>
-              <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Commitment</span>
-            </div>
-          </div>
+
         </motion.div>
 
         {/* Right – Video Card */}
@@ -113,6 +105,62 @@ export default function VideoSection() {
           </div>
         </motion.div>
       </div>
+
+      {/* Our Achievements Section */}
+      {achievements && achievements.length > 0 && (
+        <div className="max-w-7xl w-full mx-auto relative z-10 mt-32">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Achievements</h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {achievements.map((achievement, i) => (
+              <motion.div
+                key={achievement.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(1,151,178,0.1)] border border-gray-100/50 flex flex-col items-center justify-between p-8 aspect-[4/3] group transition-all duration-300 hover:-translate-y-1"
+              >
+                {/* Center Event Image (Moved to top of card flex) */}
+                <div className="flex-1 w-full flex items-center justify-center py-2 min-h-[120px]">
+                  <img 
+                    src={achievement.eventImage} 
+                    alt={achievement.title} 
+                    className="max-h-full max-w-[85%] object-contain" 
+                  />
+                </div>
+
+                {/* Bottom Section: Title & Tiny Logos */}
+                <div className="w-full flex flex-col items-center justify-end gap-3 mt-4">
+                  <h4 className="font-bold text-primary text-center tracking-wide text-lg">{achievement.title}</h4>
+                  
+                  {achievement.poweredByImages && achievement.poweredByImages.length > 0 && (
+                    <div className="flex items-center justify-center gap-4 flex-wrap mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                       {achievement.poweredByImages.map((logo, idx) => (
+                         <img 
+                           key={idx}
+                           src={logo} 
+                           alt="Powered By" 
+                           className="h-7 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                         />
+                       ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }

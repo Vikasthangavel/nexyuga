@@ -6,20 +6,20 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #0197B2;
-  --color-primary-dark: #01768D;
-  --color-primary-light: #33B8D0;
-  --color-secondary: #5ACB2A;
-  --color-secondary-dark: #44A01F;
-  --color-secondary-light: #7EDB57;
+  --color-primary: #5BCB2B;
+  --color-primary-dark: #44A01F;
+  --color-primary-light: #7EDB57;
+  --color-secondary: #0197B2;
+  --color-secondary-dark: #01768D;
+  --color-secondary-light: #33B8D0;
   --color-accent: #06B6D4;
   --color-accent-dark: #0891B2;
   --color-accent-light: #22D3EE;
   --color-bg: #ffffff;
-  --color-dark: #0D2E3B;
-  --color-dark-light: #1A4252;
+  --color-dark: #44A01F;
+  --color-dark-light: #2e6e12;
 
-  --font-heading: "Outfit", sans-serif;
+  --font-heading: "Fredoka", sans-serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
 }
 
@@ -27,7 +27,7 @@
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg);
-  color: #333;
+  color: var(--color-primary-dark);
   overflow-x: hidden;
 }
 
@@ -342,5 +342,107 @@ h1, h2, h3, h4, h5, h6 {
   }
   html {
     @apply font-sans;
+  }
+  
+  /* Accessibility Modifiers */
+  html.a11y-high-contrast {
+    filter: contrast(125%) saturate(120%);
+  }
+  
+  html.a11y-dark {
+    filter: invert(1) hue-rotate(180deg);
+  }
+  html.a11y-dark img,
+  html.a11y-dark video,
+  html.a11y-dark iframe {
+    filter: invert(1) hue-rotate(180deg);
+  }
+  
+  html.a11y-grayscale {
+    filter: grayscale(100%);
+  }
+  
+  html.a11y-large-links a {
+    font-size: 1.25em !important;
+  }
+  
+  html.a11y-highlight-links a,
+  html.a11y-highlight-links button {
+    outline: 3px solid #FFD700 !important;
+    outline-offset: 2px !important;
+    background-color: rgba(255, 255, 0, 0.1) !important;
+    color: #000 !important;
+  }
+  
+  html.a11y-dyslexia * {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+  }
+  
+  html.a11y-letter-spacing * {
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.16em !important;
+  }
+  
+  html.a11y-line-height * {
+    line-height: 1.8 !important;
+  }
+  
+  html.a11y-reduce-motion * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  
+  html.a11y-hide-images img,
+  html.a11y-hide-images video,
+  html.a11y-hide-images svg {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  html.a11y-align-left * {
+    text-align: left !important;
+  }
+  
+  html.a11y-align-center * {
+    text-align: center !important;
+  }
+  
+  html.a11y-cursor-large,
+  html.a11y-cursor-large * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' stroke='%23fff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important;
+  }
+  
+  html.a11y-cursor-white,
+  html.a11y-cursor-white * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%23000' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important;
+  }
+  
+  html.a11y-tts-mode * {
+    cursor: pointer !important;
+  }
+  html.a11y-tts-mode *:hover {
+    outline: 2px dashed #0197B2 !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* TTS Speaking Indicator Base */
+  .a11y-tts-wave span {
+    display: inline-block;
+    width: 4px;
+    height: 12px;
+    background: #0197B2;
+    margin: 0 2px;
+    border-radius: 2px;
+    animation: a11y-wave 1s ease-in-out infinite;
+  }
+  .a11y-tts-wave span:nth-child(2) { animation-delay: 0.1s; }
+  .a11y-tts-wave span:nth-child(3) { animation-delay: 0.2s; }
+  .a11y-tts-wave span:nth-child(4) { animation-delay: 0.3s; }
+  .a11y-tts-wave span:nth-child(5) { animation-delay: 0.4s; }
+  
+  @keyframes a11y-wave {
+    0%, 100% { height: 8px; }
+    50% { height: 20px; }
   }
 }

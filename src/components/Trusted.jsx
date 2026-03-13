@@ -29,11 +29,8 @@ export default function Trusted() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-12"
         >
-          <span className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-3 block">
-            Supported &amp; Trusted By
-          </span>
           <h2 className="text-3xl md:text-4xl font-bold text-dark tracking-tight">
-            Our Ecosystem Partners
+            Supported &amp; Trusted By
           </h2>
         </motion.div>
 

@@ -1,33 +1,54 @@
 import { motion } from 'framer-motion';
-import { FaGraduationCap, FaHandshake, FaBalanceScale } from 'react-icons/fa';
-import sdg4Img from '../assets/SDG4.png';
-import sdg11Img from '../assets/SDG11.jpg';
-import sdg17Img from '../assets/SDG17.jpg';
+// Custom icons replicating the user's screenshot
+const iconEducation = (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D32F2F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+    <path d="M16 2v20" />
+    {/* Pencil representation */}
+    <path d="M21 4l-4 4v11h4V4z" />
+  </svg>
+);
+
+const iconInequality = (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#E91E63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    {/* Equals sign */}
+    <path d="M9 10h6" />
+    <path d="M9 14h6" />
+    {/* Arrows pointing inward */}
+    <path d="M12 3v3m0 0l-2-2m2 2l2-2" />
+    <path d="M12 21v-3m0 0l-2 2m2-2l2 2" />
+    <path d="M3 12h3m0 0l-2-2m2 2l-2 2" />
+    <path d="M21 12h-3m0 0l2-2m-2 2l2 2" />
+  </svg>
+);
+
+const iconPartnership = (
+  <svg width="56" height="56" viewBox="0 0 100 100" fill="none" stroke="#0D47A1" strokeWidth="4">
+    {/* Interlocking Rings */}
+    <circle cx="50" cy="35" r="16" />
+    <circle cx="35" cy="45" r="16" />
+    <circle cx="65" cy="45" r="16" />
+    <circle cx="42" cy="65" r="16" />
+    <circle cx="58" cy="65" r="16" />
+    {/* Top ring color accent */}
+    <path d="M34 35 A 16 16 0 0 1 66 35" stroke="#4CAF50" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M45 19 A 16 16 0 0 1 65 29" stroke="#FFC107" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M35 29 A 16 16 0 0 1 55 19" stroke="#E91E63" strokeWidth="4" strokeLinecap="round"/>
+  </svg>
+);
 
 const goals = [
   {
-    icon: FaGraduationCap,
-    title: 'Quality Education',
-    sdg: 'SDG 4',
-    description: 'Ensuring inclusive and equitable quality education for all, promoting lifelong learning opportunities.',
-    color: '#E81D2C',
-    image: sdg4Img,
+    svgIcon: iconEducation,
+    title: 'Quality\nEducation',
   },
   {
-    icon: FaBalanceScale,
-    title: 'Reduced Inequalities',
-    sdg: 'SDG 10',
-    description: 'Reducing inequality within and among countries by empowering the differently abled through accessible tools.',
-    color: '#DD1367',
-    image: sdg11Img,
+    svgIcon: iconInequality,
+    title: 'Reduced\nInequalities',
   },
   {
-    icon: FaHandshake,
-    title: 'Partnerships for Goals',
-    sdg: 'SDG 17',
-    description: 'Strengthening the means of implementation and revitalising global partnerships for sustainable development.',
-    color: '#19486A',
-    image: sdg17Img,
+    svgIcon: iconPartnership,
+    title: 'Partnerships\nfor Goals',
   },
 ];
 
@@ -61,46 +82,26 @@ export default function SDGGoals() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-all duration-500 relative flex flex-col h-full"
+              className="relative bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 w-full aspect-square md:aspect-[4/3] flex flex-col items-center justify-center pt-8 px-8 overflow-hidden group"
             >
-              {/* Subtle top border in brand color */}
-              <div 
-                className="absolute top-0 left-0 w-full h-1 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out z-20"
-                style={{ backgroundColor: goal.color }}
-              />
-
-              <div className="overflow-hidden relative bg-gray-100 max-h-36">
-                <img
-                  src={goal.image}
-                  alt={goal.title}
-                  className="w-full h-auto block opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out mix-blend-multiply"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent opacity-60" />
-                
-                <div className="absolute bottom-4 left-6 flex items-center gap-3">
-                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-sm shadow-md" style={{ color: goal.color }}>
-                     <goal.icon />
-                   </div>
-                   <span className="font-bold text-white tracking-wide text-sm drop-shadow-md">
-                     {goal.sdg}
-                   </span>
-                </div>
+              {/* Wavy Cream Top Border */}
+              <div className="absolute top-0 left-0 w-full h-[120px] pointer-events-none z-0">
+                <svg viewBox="0 0 400 120" preserveAspectRatio="none" className="w-full h-full fill-[#F9F6F0]">
+                  <path d="M0,0 L400,0 L400,60 C320,100 240,40 160,80 C80,120 40,80 0,60 Z" />
+                </svg>
               </div>
 
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 className="font-bold text-dark text-xl mb-4 group-hover:text-primary transition-colors">
+              {/* Content */}
+              <div className="relative z-10 flex flex-col items-center text-center mt-6">
+                <motion.div 
+                  className="mb-6 transform group-hover:scale-110 transition-transform duration-500 ease-out"
+                >
+                  {goal.svgIcon}
+                </motion.div>
+                
+                <h3 className="font-bold text-dark text-xl leading-snug whitespace-pre-line group-hover:text-primary transition-colors">
                   {goal.title}
                 </h3>
-                <p className="text-gray-500 text-sm font-light leading-relaxed mb-6 flex-grow">
-                  {goal.description}
-                </p>
-                
-                <div className="mt-auto flex items-center gap-2 text-sm font-medium transition-colors" style={{ color: goal.color }}>
-                   <span>Learn More</span>
-                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transform group-hover:translate-x-1 transition-transform">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                   </svg>
-                </div>
               </div>
             </motion.div>
           ))}

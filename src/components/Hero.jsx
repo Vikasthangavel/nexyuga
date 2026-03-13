@@ -1,14 +1,42 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { Button } from '@/components/ui/button';
 import { FaPlay, FaArrowRight } from 'react-icons/fa';
 import heroImg1 from '../assets/heroimage.png';
 import heroImg2 from '../assets/heroimage2.png';
+import heroImg3 from '../assets/heroimage3.png';
+import heroImg4 from '../assets/heroimage4.png';
 
-const heroImages = [heroImg1, heroImg2];
+const heroImages = [heroImg1,  heroImg3,heroImg2, heroImg4];
 
 export default function Hero() {
   const [currentImg, setCurrentImg] = useState(0);
+  const containerRef = useRef(null);
+  const [heroText, setHeroText] = useState('*Empowering* Confidence \\n *Through Touch &* Audio');
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'settings', 'hero'), (docSnap) => {
+      if (docSnap.exists() && docSnap.data().text) {
+        setHeroText(docSnap.data().text);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const smoothScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+  // Map scroll progress to track the bottom half of the SVG curve
+  // Curve from center -> bottom right
+  const imgY = useTransform(smoothScroll, [0, 1], [0, 500]);
+  const imgX = useTransform(smoothScroll, [0, 1], [0, 180]);
+  const imgRotate = useTransform(smoothScroll, [0, 1], [-5, 10]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -20,6 +48,7 @@ export default function Hero() {
   return (
     <section
       id="home"
+      ref={containerRef}
       className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden bg-white"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -45,22 +74,25 @@ export default function Hero() {
             </svg>
           </div>
           
-          {/* Floating Image Carousel Card */}
+          {/* Floating Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: -5, y: [0, -10, 0] }}
-            transition={{ 
-              duration: 0.8, 
-              y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            style={{ 
+              y: imgY, 
+              x: imgX, 
+              rotate: imgRotate,
+              marginLeft: '-3rem' // initial -translate-x-12 equivalent
             }}
-            className="relative z-10 inline-block max-w-xs rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gray-50 transform -translate-x-12"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 inline-block w-[500px] max-w-full"
           >
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentImg}
                 src={heroImages[currentImg]}
                 alt="Tactile Learning Tool"
-                className="block w-auto h-auto max-w-full"
+                className="block w-full h-auto mix-blend-multiply"
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
@@ -69,15 +101,14 @@ export default function Hero() {
             </AnimatePresence>
 
             {/* Dot indicators */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            <div className="absolute bottom-[-15px] left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
               {heroImages.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentImg(i)}
                   className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    i === currentImg ? 'bg-white w-4' : 'bg-white/50'
+                    i === currentImg ? 'bg-primary w-4' : 'bg-primary/30'
                   }`}
-                  style={{ rotate: '5deg' }}
                   aria-label={`Switch to image ${i + 1}`}
                 />
               ))}
@@ -90,25 +121,7 @@ export default function Hero() {
           
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 w-full">
             {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex items-center gap-3 bg-gray-50/80 backdrop-blur-md border border-gray-100 rounded-full py-2 px-4 shadow-sm mb-6 lg:mb-0"
-            >
-              <div className="flex flex-col">
-                 <span className="text-primary font-bold text-sm tracking-wide">125K+</span>
-                 <span className="text-gray-500 text-xs">Students Impacted</span>
-              </div>
-              <div className="flex -space-x-2">
-                 {['#0197B2', '#5ACB2A', '#06B6D4'].map((color, i) => (
-                   <div key={i} className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-[10px] text-white" style={{ backgroundColor: color }}>
-                     ★
-                   </div>
-                 ))}
-              </div>
-              <FaArrowRight className="text-gray-400 text-xs ml-2" />
-            </motion.div>
+
 
             {/* Top Right Mini-Text */}
             <motion.div
@@ -128,25 +141,31 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="mb-6 text-dark relative z-20"
           >
-            <h1 className="text-[42px] sm:text-[58px] md:text-[72px] lg:text-[86px] font-bold leading-[1.05] tracking-tight">
-              Empowering{' '}
-              <span className="relative inline-block text-primary">
-                Confidence
-                {/* Corner box accent */}
-                <div className="absolute inset-[-4px] md:inset-[-8px] border border-primary/50 pointer-events-none flex justify-between flex-col">
-                  <div className="flex justify-between -mt-[3px] md:-mt-[4px]">
-                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
-                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
-                  </div>
-                  <div className="flex justify-between -mb-[3px] md:-mb-[4px]">
-                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
-                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
-                  </div>
-                </div>
-              </span>
-              <br />
-              Through Touch{' '}
-              <span className="text-primary">&amp; Audio</span>
+            <h1 className="text-[42px] sm:text-[58px] md:text-[72px] lg:text-[86px] font-bold leading-[1.05] tracking-tight whitespace-pre-wrap">
+              {heroText.split('*').map((part, index) => {
+                if (index % 2 === 0) {
+                  // Normal text (even index)
+                  return <span key={index}>{part}</span>;
+                } else {
+                  // Highlighted text (odd index)
+                  return (
+                    <span key={index} className="relative inline-block text-primary">
+                      {part}
+                      {/* Corner box accent */}
+                      <div className="absolute inset-[-4px] md:inset-[-8px] border border-primary/50 pointer-events-none flex justify-between flex-col">
+                        <div className="flex justify-between -mt-[3px] md:-mt-[4px]">
+                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                        </div>
+                        <div className="flex justify-between -mb-[3px] md:-mb-[4px]">
+                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -ml-[3px] md:-ml-[4px]" />
+                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary -mr-[3px] md:-mr-[4px]" />
+                        </div>
+                      </div>
+                    </span>
+                  );
+                }
+              })}
             </h1>
           </motion.div>
 
@@ -159,7 +178,7 @@ export default function Hero() {
               className="flex items-center gap-4"
             >
                <Button asChild size="lg" className="h-14 px-8 rounded-full text-base text-white shadow-xl transition-all hover:-translate-y-1" style={{ backgroundColor: '#5ACB2A' }} onMouseEnter={e => e.currentTarget.style.backgroundColor='#4ab524'} onMouseLeave={e => e.currentTarget.style.backgroundColor='#5ACB2A'}>
-                 <a href="#studies">Let's Collaborate!</a>
+                 <a href="/contact">Let's Collaborate!</a>
                </Button>
                <a href="#video" className="w-12 h-12 rounded-full border-2 text-white flex items-center justify-center hover:scale-110 transition-transform cursor-pointer" style={{ borderColor: '#0197B2', backgroundColor: '#0197B2' }}>
                  <FaPlay className="ml-1 text-sm" />

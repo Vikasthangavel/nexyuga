@@ -20,6 +20,7 @@ export default function Journey() {
   });
 
   const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const carTop = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   // Show nothing if no data yet
   if (!loading && steps.length === 0) return null;
@@ -79,6 +80,17 @@ export default function Journey() {
               }}
             />
 
+            {/* Scroll-driven Car */}
+            <motion.div
+              className="absolute left-[28px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 bg-white border-2 border-primary rounded-full flex items-center justify-center text-lg z-20 shadow-lg origin-center"
+              style={{
+                top: carTop,
+                marginTop: '-16px' // perfectly align center over the line tip
+              }}
+            >
+              🚘
+            </motion.div>
+
             <div className="space-y-16 md:space-y-24">
               {steps.map((step, i) => (
                 <JourneyCard key={step.id} step={step} i={i} isMobile={isMobile} />
@@ -117,15 +129,26 @@ function JourneyCard({ step, i, isMobile }) {
 
   return (
     <div ref={cardRef} className={`relative flex flex-col md:flex-row items-center ${isEven ? 'md:flex-row-reverse' : ''}`} style={{ perspective: 1200 }}>
-      {/* Node */}
+      {/* Node Dot */}
       <div
-        className="absolute left-[28px] md:left-1/2 w-11 h-11 rounded-full flex items-center justify-center -translate-x-1/2 z-10 text-sm font-bold text-white border-4 border-white shadow-md tracking-wider"
+        className="absolute left-[28px] md:left-[50%] w-4 h-4 rounded-full -translate-x-[50%] z-10 border-2 border-white shadow-sm"
         style={{ backgroundColor: color }}
-      >
-        {number}
-      </div>
+      />
 
-      <div className="hidden md:block w-1/2" />
+      {/* Opposite Side (Image or Spacer) */}
+      <div className={`hidden md:flex flex-col justify-center w-1/2 ${!isEven ? 'md:pr-16 lg:pr-20 items-end' : 'md:pl-16 lg:pl-20 items-start'}`}>
+        {step.imageUrl && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full max-w-[320px] h-[200px] p-6 bg-white rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.05)] border border-gray-100 flex items-center justify-center group shrink-0"
+          >
+            <img src={step.imageUrl} alt={step.title} className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+          </motion.div>
+        )}
+      </div>
 
       {/* Card */}
       <div className={`w-full md:w-1/2 pl-16 md:pl-0 ${isEven ? 'md:pr-16 lg:pr-20' : 'md:pl-16 lg:pl-20'}`}>
