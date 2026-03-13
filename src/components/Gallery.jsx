@@ -71,12 +71,32 @@ export default function Gallery() {
 
         {/* Heart Grid */}
         {!loading && filled.length > 0 && (
-          <div className="relative w-full max-w-[800px] mx-auto mt-10 p-2 sm:p-4">
-            <motion.div
-              className="absolute inset-0 bg-primary opacity-10 blur-[60px] rounded-full pointer-events-none"
-              animate={{ scale: [1, 1.05, 1], opacity: [0.08, 0.15, 0.08] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            />
+          <div className="relative w-full max-w-[800px] mx-auto mt-10 p-2 sm:p-4 perspective-[1000px]">
+            {/* Outer Pulsing Rings */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+              <motion.div
+                className="absolute w-[100%] h-[100%] rounded-full border border-primary/30"
+                animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                className="absolute w-[115%] h-[115%] rounded-full border border-primary/20"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0, 0.2] }}
+                transition={{ duration: 4, delay: 1, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                className="absolute w-[130%] h-[130%] rounded-full border border-primary/10"
+                animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0, 0.1] }}
+                transition={{ duration: 4, delay: 2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              {/* Core glow */}
+              <motion.div
+                className="absolute w-[80%] h-[80%] bg-primary/10 blur-[80px] rounded-full"
+                animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </div>
+            
             <div className="relative z-10 grid grid-cols-7 gap-1 sm:gap-2 md:gap-3 lg:gap-4">
               {heartPattern.map((slot, i) => {
                 if (slot === 0) return <div key={`empty-${i}`} className="col-span-1" />;

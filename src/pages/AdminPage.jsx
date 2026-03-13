@@ -231,11 +231,10 @@ function GalleryTab() {
 }
 
 /* ─── JOURNEY TAB ────────────────────────────────────────────── */
-const JOURNEY_ICONS = ['FaLightbulb', 'FaFlask', 'FaTrophy', 'FaRocket', 'FaStar', 'FaHeart'];
 
 function JourneyTab() {
   const { data, loading, error } = useCollection('journey', 'year');
-  const blank = { year: '', title: '', desc: '', badge: '', color: '#0197B2', icon: 'FaRocket' };
+  const blank = { year: '', title: '', desc: '', badge: '', color: '#0197B2', step: '' };
   const [form, setForm] = useState(blank);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(null);
@@ -264,7 +263,7 @@ function JourneyTab() {
 
   function startEdit(item) {
     setEditing(item.id);
-    setForm({ year: item.year, title: item.title, desc: item.desc, badge: item.badge, color: item.color, icon: item.icon });
+    setForm({ year: item.year, title: item.title, desc: item.desc, badge: item.badge, color: item.color, step: item.step || '' });
   }
 
   return (
@@ -282,12 +281,7 @@ function JourneyTab() {
             <label className="text-xs font-semibold text-dark/60 uppercase tracking-wide">Accent Colour</label>
             <input type="color" value={form.color} onChange={e => set('color', e.target.value)} className="w-full h-10 rounded-xl border border-gray-200 cursor-pointer" />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-dark/60 uppercase tracking-wide">Icon</label>
-            <select value={form.icon} onChange={e => set('icon', e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary">
-              {JOURNEY_ICONS.map(ic => <option key={ic} value={ic}>{ic}</option>)}
-            </select>
-          </div>
+          <Input label="Step Number" value={form.step} onChange={e => set('step', e.target.value)} placeholder="01" />
         </div>
         <div className="flex gap-2">
           <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-dark transition disabled:opacity-50">
@@ -314,7 +308,10 @@ function JourneyTab() {
                 {item.year?.slice(-2)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-dark">{item.title}</p>
+                <p className="font-semibold text-sm text-dark">
+                  <span className="text-primary mr-2 opacity-80">{item.step ? `#${item.step}` : ''}</span>
+                  {item.title}
+                </p>
                 <p className="text-xs text-dark/50 truncate">{item.desc}</p>
               </div>
               <div className="flex gap-1.5 shrink-0">
